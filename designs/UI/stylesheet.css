@@ -40,3 +40,9 @@
 li {
     list-style-type: none;
 }
+
+.login-form {
+    border: 1px solid #ddd;
+    padding: 2rem;
+    margin: 4em;
+}
