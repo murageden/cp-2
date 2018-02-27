@@ -23,18 +23,25 @@
     margin: 2rem;
 }
 
-.b-avatar {
+.avatar {
     border: 1px solid #ddd;
     border-radius: 4px;
+    background: teal;
+}
+
+.b-avatar {
     width: 200px;
     height: 200px;
 }
 
 .u-avatar {
-    border: 1px solid #ddd;
-    border-radius: 4px;
     width: 100px;
     height: 100px;
+}
+
+.p-avatar {
+    width: 50px;
+    height: 50px;
 }
 
 li {
