@@ -48,6 +48,10 @@ li {
     list-style-type: none;
 }
 
+label {
+    font-weight: 500;
+}
+
 .login-form {
     border: 1px solid #ddd;
     border-radius: 4px;
