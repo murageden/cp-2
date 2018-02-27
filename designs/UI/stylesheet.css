@@ -1,0 +1,31 @@
+.m-flex {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+.flex-down {
+    flex-flow: column nowrap;
+}
+
+.flex-accross {
+    flex-flow: row nowrap;
+}
+
+.b {
+    border-bottom: 1px solid #ddd;
+    padding: 1rem;
+}
+
+.b-details,
+.b-avatar {
+    margin: 2rem;
+}
+
+.b-avatar {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 200px;
+    height: 200px;
+}
