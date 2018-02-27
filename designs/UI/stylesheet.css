@@ -43,6 +43,7 @@ li {
 
 .login-form {
     border: 1px solid #ddd;
-    padding: 2rem;
+    border-radius: 4px;
+    padding: 3rem;
     margin: 4em;
 }
