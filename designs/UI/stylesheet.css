@@ -30,6 +30,13 @@
     height: 200px;
 }
 
+.u-avatar {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100px;
+    height: 100px;
+}
+
 li {
     list-style-type: none;
 }
