@@ -15,3 +15,6 @@ class User(object):
             'id': self.id,
             'msg':'User id {} created successfully'.format(self.id)
             }
+
+    def get_all_users(self):
+        return self.users        
