@@ -1,5 +1,6 @@
 api/m-env/*
 .vscode
-api/__pycache__/*
+api/v1/tests/__pycache__/*
+api/v1/we_connect/__pycache__/*
 .pytest_cache
 *.pickle
