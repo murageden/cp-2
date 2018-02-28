@@ -1,0 +1,5 @@
+api/m-env/*
+.vscode
+api/__pycache__/*
+.pytest_cache
+*.pickle
