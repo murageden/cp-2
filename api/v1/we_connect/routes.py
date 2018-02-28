@@ -15,3 +15,27 @@ def create_user():
     message = user.create_user(name, email, password)
     return jsonify(message)
     
+# logs in a user
+@app.route('/weconnect/api/v1/auth/login', methods=['POST'])
+def login_user():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    user = User()
+    all_users = user.get_all_users()
+    for user in all_users:
+        if not user.email == email:
+            message = {
+                
+                'msg': 'Wrong email-password combination' 
+            }
+            return jsonify(message)
+        else:
+            if user.password == password:
+                message = {
+                        'id':user.id,
+                        'name':user.name,
+                        'email':user.email,
+                        'msg': 'Log in successfull' 
+                    }
+                return jsonify(message)
+            
