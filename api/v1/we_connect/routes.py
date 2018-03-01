@@ -68,7 +68,14 @@ def reset_password():
 # register a business
 @app.route('/weconnect/api/v1/businesses', methods=['POST'])
 def register_business():
-    pass
+    name = request.form.get('name')
+    description = request.form.get('description')
+    category = request.form.get('category')
+    location = request.form.get('location')
+    ownerId = request.form.get('ownerId')
+    business = Business()
+    message = business.create_business(name, category, description, location, ownerId)
+    return jsonify(message)
 
 
 # updates a business
