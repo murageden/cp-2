@@ -10,7 +10,7 @@ class User(object):
             self.id = User.users[-1].id + 1
         self.user_dict = {
             'id': self.id,
-            'name': name;
+            'name': name,
             'email': email,
             'password': password}
         self.users.append(self.user_dict)
