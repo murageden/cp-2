@@ -1,5 +1,6 @@
 class User(object):
     users = []
+
     def __init__(self):
         pass
 
@@ -13,8 +14,8 @@ class User(object):
         self.users.append(self)
         return {
             'id': self.id,
-            'msg':'User id {} created successfully'.format(self.id)
+            'msg': 'User id {} created successfully'.format(self.id)
             }
 
     def get_all_users(self):
-        return self.users        
+        return self.users
