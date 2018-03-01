@@ -13,7 +13,7 @@ install:
 
 # run test and report test-coverage to coveralls.io
 script:
-  - "coverage run --source=v1 -m pytest && coverage report"
+  - "coverage run --source=v1/tests -m pytest && coverage report"
   - "coveralls"
 
 after_success:
