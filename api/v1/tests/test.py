@@ -58,3 +58,12 @@ class BusinessTestCase(unittest.TestCase):
             self.response_add['id'], 'Modify Business', 'Shop', 'Behind Equity Bank', 'Githurai, Nairobi Area', 5)
         self.assertEqual(
             self.response_modify['msg'], 'You cannot update this business')
+
+    def test_deletes_a_business_if_exists(self):
+        self.response_add = self.business.create_business(
+            'Test Business5', 'Supermarket', 'Behind Equity Bank', 'Githurai, Nairobi Area', 4)
+        self.response_delete = self.business.delete_business(
+            self.response_add['id'])
+        self.assertEqual(
+            self.response_delete['msg'], 'Business id {} deleted successfully'.format(
+            self.response_delete['id']))
