@@ -5,6 +5,10 @@ from we_connect.user import User
 app = Flask(__name__)
 
 
+# holds user in session
+logged_in = []
+
+
 # creates a user account
 @app.route('/weconnect/api/v1/auth/register', methods=['POST'])
 def create_user():
@@ -30,6 +34,7 @@ def login_user():
                         'name': user['name'],
                         'email': user['email'],
                         'msg': 'Log in successfull'}
+            logged_in.append(user)
             return jsonify(message)
         else:
             message = {
@@ -40,7 +45,18 @@ def login_user():
 # logs out a user
 @app.route('/weconnect/api/v1/auth/logout', methods=['POST'])
 def logout():
-    pass
+    if len(logged_in) == 0:
+        message = {
+                'msg': 'No user is logged in currently'}
+        return jsonify(message)
+    else:
+        message = {
+                    'id': logged_in[-1]['id'],
+                    'name': logged_in[-1]['name'],
+                    'email': logged_in[-1]['email'],
+                    'msg': 'Log out successfull'}
+        logged_in.remove(logged_in[-1])
+        return jsonify(message)
 
 
 # password reset
