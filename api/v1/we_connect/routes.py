@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
 # local imports
 from we_connect.user import User
+from we_connect.business import Business
+from we_connect.review import Review
 
 app = Flask(__name__)
 
@@ -62,6 +64,8 @@ def logout():
 # password reset
 @app.route('/weconnect/api/v1/auth/reset-password', methods=['POST'])
 def reset_password():
+    userId = request.form.get('id')
+    email = request.form.get('email')
     pass
 
 
@@ -94,13 +98,16 @@ def update_business():
 # removes a business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['DELETE'])
 def remove_business():
-    pass
+    business = Business()
+    message = business.delete_business(businessId)
+    return jsonify(message)
 
 
 # retrieves all businesses
 @app.route('/weconnect/api/v1/businesses', methods=['GET'])
 def retrieve_all_businesses():
-    pass
+    business = Business()
+    business.view_all_businesses()
 
 
 # retrieves a single business
@@ -114,14 +121,22 @@ def retrieve_business(businessId):
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
 methods=['POST'])
 def add_review_for(businessId):
-    pass
+    name = request.form.get('rating')
+    description = request.form.get('body')
+    category = request.form.get('userId')
+    location = request.form.get('businessId')
+    review = Review()
+    message = review.add_review(rating, body, userId, businessId)
+    return jsonify(message)
 
 
 # retrieves all reviews for a single business
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
 methods=['GET'])
 def get_reviews_for(businessId):
-    pass
+    review = Review()
+    message = review.view_reviews_for(businessId)
+    return jsonify(message)
 
 
 if(__name__) == '__main__':
