@@ -24,11 +24,11 @@ def login_user():
     user = User()
     all_users = user.get_all_users()
     for user in all_users:
-        if user.email == email and user.password == password:
+        if user['email'] == email and user['password'] == password:
             message = {
-                        'id': user.id,
-                        'name': user.name,
-                        'email': user.email,
+                        'id': user['id'],
+                        'name': user['name'],
+                        'email': user['email'],
                         'msg': 'Log in successfull'}
             return jsonify(message)
         else:
