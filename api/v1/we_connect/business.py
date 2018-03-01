@@ -38,19 +38,43 @@ class Business(object):
     # updates a business
     def update_business(
         self, id, name, category, description, location, ownerId):
-        response = self.view_business(id)
-        if not response['ownerId'] == ownerId:
+        self.response = self.view_business(id)
+        if not self.response['ownerId'] == ownerId:
             return {
                 'status': 'error',
                 'msg': 'You cannot update this business'
             }
-        if response['msg'] == 'okay':
-            response['name'] = name
-            response['category'] = category
-            response['description'] = description
-            response['location'] = location
+        if self.response['msg'] == 'okay':
+            self.response['name'] = name
+            self.response['category'] = category
+            self.response['description'] = description
+            self.response['location'] = location
             return {
                 'id': id,
                 'msg': 'Business id {} modified successfully'.format(id)
             }
-        return response
+        return self.response
+    
+    # deletes a business
+    def delete_business(self, id):
+        self.response = self.view_business(id)
+        if self.response['msg'] == 'okay':
+            Business.businesses.remove(self.response)
+            return {
+                'id': self.response['id'],
+                'msg': 'Business id {} deleted successfully'.format(
+                    self.response['id'])
+            }
+        return self.response
+    
+    # return businesses by loaction
+    def search_business_by_location(self, location):
+        pass
+
+    # return businesses by category
+    def search_business_by_location(self, location):
+        pass
+
+    # return all businesses
+    def view_all_businesses(self):
+        return Business.businesses
