@@ -1,5 +1,6 @@
 import unittest
 from we_connect.user import User
+from we_connect.business import Business
 
 
 class UserTestCase(unittest.TestCase):
@@ -15,3 +16,14 @@ class UserTestCase(unittest.TestCase):
 
     def test_get_all_users(self):
         pass
+
+class BusinessTestCase(unittest.TestCase):
+    def setUp(self):
+        self.business = Business()
+    
+    def test_create_business(self):
+        self.response = self.business.create_business(
+            'Test Business', 'Supermarket', 'Behind Equity Bank', 'Githurai, Nairobi Area', 4)
+        self.assertEqual(self.response['msg'],
+        'Business id {} created successfully'.format(
+            self.response['id']))
