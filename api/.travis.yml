@@ -16,6 +16,5 @@ script:
   - "coverage run --source=v1 -m pytest && coverage report"
   - "coveralls"
 
-
 after_success:
   - "coveralls"
