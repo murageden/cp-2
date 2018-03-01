@@ -81,7 +81,14 @@ def register_business():
 # updates a business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['PUT'])
 def update_business():
-    pass
+    name = request.form.get('name')
+    description = request.form.get('description')
+    category = request.form.get('category')
+    location = request.form.get('location')
+    ownerId = request.form.get('ownerId')
+    business = Business()
+    message = business.update_business(businessId, name, category, description, location, ownerId)
+    return jsonify(message)
 
 
 # removes a business
@@ -99,8 +106,8 @@ def retrieve_all_businesses():
 # retrieves a single business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['GET'])
 def retrieve_business(businessId):
-    business = Business().get_business(businessId)
-    return jsonify({'business': business})
+    response = Business().view_business(businessId)
+    return jsonify(response)
 
 
 # adds a review to a business
