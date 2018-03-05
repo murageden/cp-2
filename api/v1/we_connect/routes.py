@@ -6,26 +6,26 @@ from we_connect.review import Review
 
 app = Flask(__name__)
 
-
-
 # creates a user account
 @app.route('/weconnect/api/v1/auth/register', methods=['POST'])
 def create_user():
     content = request.get_json(force=True)
     user = User()
-    message = user.create_user(content['name'],
+    message = user.add_user(content['name'],
     content['email'], content['password'])
-    return jsonify(message)
+    return jsonify(message), 201
 
 
 # logs in a user
 @app.route('/weconnect/api/v1/auth/login', methods=['POST'])
 def login_user():
+    if User.user_logged_in:
+        return jsonify({
+            'msg': 'A user is logged in already'
+        }) 
     content = request.get_json(force=True)
-    user = User()
-    all_users = user.get_all_users()
     message = {}
-    for user in all_users:
+    for user in User.users:
         if user['email'] == content['email'] and user['password'] == content['password']:
             message = {
                         'id': user['id'],
@@ -34,7 +34,7 @@ def login_user():
                         'msg': 'Log in successfull'}
             User.user_logged_in = user
         if message:
-            return jsonify(message)
+            return jsonify(message), 201
     message = {
         'msg': 'Wrong email-password combination'}
     return jsonify(message)
@@ -44,10 +44,9 @@ def login_user():
 @app.route('/weconnect/api/v1/auth/logout', methods=['POST'])
 def logout():
     if User.user_logged_in == {}:
-        message = {
-                'msg': 'No user is logged in currently'}
-        return jsonify(message)
-    else:
+        return jsonify({
+                'msg': 'No user is logged in currently'})
+    else:          
         message = {
                     'id': User.user_logged_in['id'],
                     'name': User.user_logged_in['name'],
@@ -55,13 +54,14 @@ def logout():
                     'msg': 'Log out successfull'}
         User.user_logged_in = {}
         return jsonify(message)
-
+       
 
 # password reset
 @app.route('/weconnect/api/v1/auth/reset-password', methods=['POST'])
 def reset_password():
-    userId = request.form.get('id')
-    email = request.form.get('email')
+    content = request.get_json(force=True)
+    
+
     pass
 
 
@@ -127,7 +127,3 @@ def get_reviews_for(businessId):
     review = Review()
     message = review.view_reviews_for(businessId)
     return jsonify(message)
-
-
-if(__name__) == '__main__':
-    app.run(debug=True)
