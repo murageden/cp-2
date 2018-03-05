@@ -59,55 +59,45 @@ def logout():
 # password reset
 @app.route('/weconnect/api/v1/auth/reset-password', methods=['POST'])
 def reset_password():
+    if User.user_logged_in == {}:
+        return jsonify({
+                'msg': 'You have to be logged in'})
     content = request.get_json(force=True)
+    for user in User.users:
+        if user['email'] == content['email']:
+            user['password'] = content['password']
+            return jsonify({'msg': 'Password changed successfully'})
+    return jsonify({'msg': 'Email provided is incorrect'})
     
-
-    pass
-
 
 # register a business
 @app.route('/weconnect/api/v1/businesses', methods=['POST'])
 def register_business():
-    content = request.get_json(force=True)
-    business = Business()
-    message = business.create_business(content['name'], content['category'],
-    content['description'], content['location'], content['ownerId'])
-    return jsonify(message)
+    pass
 
 
 # updates a business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['PUT'])
 def update_business(businessId):
-    content = request.get_json(force=True)
-    business = Business()
-    message = business.update_business(businessId, content['name'],
-    content['category'], content['description'],
-    content['location'], content['ownerId'])
-    return jsonify(message)
+    pass
 
 
 # removes a business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['DELETE'])
-def remove_business(businessId):
-    business = Business()
-    message = business.delete_business(businessId)
-    return jsonify(message)
+def delete_business(businessId):
+    pass
 
 
 # retrieves all businesses
 @app.route('/weconnect/api/v1/businesses', methods=['GET'])
-def retrieve_all_businesses():
-    business = Business()
-    message = business.view_all_businesses()
-    return jsonify(message)
+def get_all_businesses():
+    pass
 
 
 # retrieves a single business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['GET'])
-def retrieve_business(businessId):
-    response = Business().view_business(businessId)
-    return jsonify(response)
-
+def get_business(businessId):
+    pass
 
 # adds a review to a business
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
