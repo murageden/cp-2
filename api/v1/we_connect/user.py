@@ -1,24 +1,27 @@
+from datetime import datetime
+
 class User(object):
     users = []
     user_logged_in = {}
 
-    def __init__(self):
-        pass
-
-    def create_user(self, name, email, password):
+    # creates a new user
+    def add_user(self, name, email, password):
         self.id = 1
+        self.created_on = str(datetime.now())
         if len(User.users):
             self.id = User.users[-1]['id'] + 1
         self.user_dict = {
             'id': self.id,
             'name': name,
             'email': email,
-            'password': password}
+            'password': password,
+            'created on': self.created_on
+            }
         self.users.append(self.user_dict)
         return {
-            'id': self.id,
-            'msg': f'User id {self.id} created successfully'
-            }
+            'user': self.user_dict,
+            'msg': 'User created ok',
+        }
 
-    def get_all_users(self):
-        return User.users
+    def reset_password(self, email, new_pass):
+        pass
