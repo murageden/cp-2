@@ -22,6 +22,12 @@ class User(object):
             'user': self.user_dict,
             'msg': 'User created ok',
         }
-
-    def reset_password(self, email, new_pass):
-        pass
+    
+    def view_user(self, id):
+        for user in self.users:
+            if user['id'] == id:
+                return user
+        return {
+            'id': id,
+            'msg': f'User id {id} not found'
+        }
