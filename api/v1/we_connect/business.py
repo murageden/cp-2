@@ -1,4 +1,5 @@
 from datetime import datetime
+from we_connect.user import User
 
 class Business(object):
     businesses = []
@@ -9,6 +10,7 @@ class Business(object):
     # creates a business
     def add_business(self, name, category, description, location, ownerId):
         self.id = 1
+        self.user = User()
         self.created_on = str(datetime.now())
         if not len(Business.businesses) == 0:
             self.id = Business.businesses[-1]['id'] + 1
@@ -18,15 +20,14 @@ class Business(object):
             'category': category,
             'description': description,
             'location': location,
-            'ownerId': ownerId,
+            'owner': self.user.view_user(ownerId),
             'msg': 'okay',
             'created on': self.created_on
         }
         self.businesses.append(self.business_dict)
         return {
             'business': self.business_dict,
-            'msg': 'Business created ok',
-            'created on': self.created_on
+            'msg': 'Business created ok'
         }
 
     # reads a business
