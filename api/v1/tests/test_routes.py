@@ -3,6 +3,7 @@ import json
 
 from flask import jsonify
 from we_connect.routes import app
+from we_connect.user import User
 
 
 class EndpointsTestCase(unittest.TestCase):
