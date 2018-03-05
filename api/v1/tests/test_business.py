@@ -1,22 +1,5 @@
 import unittest
-from we_connect.user import User
 from we_connect.business import Business
-from we_connect.review import Review
-
-
-class UserTestCase(unittest.TestCase):
-    def setUp(self):
-        self.user = User()
-
-    def test_create_user(self):
-        self.response = self.user.create_user(
-            'Test User', 'test@user.com', '1234pass')
-        self.assertEqual(self.response['msg'],
-        f'User id {self.response["id"]} created successfully')
-
-    def test_get_all_users(self):
-        pass
-
 class BusinessTestCase(unittest.TestCase):
     def setUp(self):
         self.business = Business()
@@ -66,6 +49,3 @@ class BusinessTestCase(unittest.TestCase):
             self.response_add['id'])
         self.assertEqual(self.response_delete['msg'], 
             f'Business id {self.response_delete["id"]} deleted successfully')
-
-if __name__=='__main__':
-    app.run(debug=True)
