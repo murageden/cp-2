@@ -21,8 +21,7 @@ class Business(object):
         Business.businesses.append(self.business_dict)
         return {
             'id': self.id,
-            'msg': 'Business id {} created successfully'.format(
-                self.id)
+            'msg': f'Business id {self.id} created successfully'
         }
 
     # reads a business
@@ -32,26 +31,26 @@ class Business(object):
                 return business
         return {
             'id': id,
-            'msg': 'Business id {} not found'.format(id)
+            'msg': f'Business id {id} not found'
         }
 
     # updates a business
     def update_business(
         self, id, name, category, description, location, ownerId):
         self.response = self.view_business(id)
-        if not self.response['ownerId'] == ownerId:
-            return {
-                'status': 'error',
-                'msg': 'You cannot update this business'
-            }
         if self.response['msg'] == 'okay':
+            if not self.response['ownerId'] == ownerId:
+                return {
+                    'status': 'error',
+                    'msg': 'You cannot update this business'
+                }
             self.response['name'] = name
             self.response['category'] = category
             self.response['description'] = description
             self.response['location'] = location
             return {
                 'id': id,
-                'msg': 'Business id {} modified successfully'.format(id)
+                'msg': f'Business id {id} modified successfully'
             }
         return self.response
     
@@ -62,8 +61,7 @@ class Business(object):
             Business.businesses.remove(self.response)
             return {
                 'id': self.response['id'],
-                'msg': 'Business id {} deleted successfully'.format(
-                    self.response['id'])
+                'msg': f'Business id {self.response["id"]} deleted successfully'
             }
         return self.response
     

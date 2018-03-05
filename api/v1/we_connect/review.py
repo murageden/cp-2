@@ -6,7 +6,7 @@ class Review(object):
     # adds a review
     def add_review(self, rating, body, userId, businessId):
         self.id = 1
-        if not len(reviews) == 0:
+        if not len(Review.reviews) == 0:
             self.id = Review.reviews[-1]['id'] + 1
         self.review_dict = {
             'id': self.id,
@@ -18,17 +18,18 @@ class Review(object):
         Review.reviews.append(self.review_dict)
         return {
             'id': self.id,
-            'msg': 'Review id {} created successfully'.format(self.id)
+            'msg': f'Review id {self.id} created successfully'
         }
 
     # view a business' review
     def view_reviews_for(self, businessId):
+        reviews_for = []
         for review in Review.reviews:
             if review['businessId'] == businessId:
-                self.reviews_for = []
-                self.reviews_for.append(review)
-                return self.reviews_for
+                reviews_for.append(review)
+        if reviews_for:
+            return reviews_for
         return {
             'status': 'error',
-            'msg': 'No reviews found for business id {}'.format(businessId)
+            'msg': f'No reviews found for business id {businessId}'
         }

@@ -7,57 +7,53 @@ from we_connect.review import Review
 app = Flask(__name__)
 
 
-# holds user in session
-logged_in = []
-
 
 # creates a user account
 @app.route('/weconnect/api/v1/auth/register', methods=['POST'])
 def create_user():
-    name = request.form.get('name')
-    email = request.form.get('email')
-    password = request.form.get('password')
+    content = request.get_json(force=True)
     user = User()
-    message = user.create_user(name, email, password)
+    message = user.create_user(content['name'],
+    content['email'], content['password'])
     return jsonify(message)
 
 
 # logs in a user
 @app.route('/weconnect/api/v1/auth/login', methods=['POST'])
 def login_user():
-    email = request.form.get('email')
-    password = request.form.get('password')
+    content = request.get_json(force=True)
     user = User()
     all_users = user.get_all_users()
+    message = {}
     for user in all_users:
-        if user['email'] == email and user['password'] == password:
+        if user['email'] == content['email'] and user['password'] == content['password']:
             message = {
                         'id': user['id'],
                         'name': user['name'],
                         'email': user['email'],
                         'msg': 'Log in successfull'}
-            logged_in.append(user)
+            User.user_logged_in = user
+        if message:
             return jsonify(message)
-        else:
-            message = {
-                'msg': 'Wrong email-password combination'}
-            return jsonify(message)
+    message = {
+        'msg': 'Wrong email-password combination'}
+    return jsonify(message)
 
 
 # logs out a user
 @app.route('/weconnect/api/v1/auth/logout', methods=['POST'])
 def logout():
-    if len(logged_in) == 0:
+    if User.user_logged_in == {}:
         message = {
                 'msg': 'No user is logged in currently'}
         return jsonify(message)
     else:
         message = {
-                    'id': logged_in[-1]['id'],
-                    'name': logged_in[-1]['name'],
-                    'email': logged_in[-1]['email'],
+                    'id': User.user_logged_in['id'],
+                    'name': User.user_logged_in['name'],
+                    'email': User.user_logged_in['email'],
                     'msg': 'Log out successfull'}
-        logged_in.remove(logged_in[-1])
+        User.user_logged_in = {}
         return jsonify(message)
 
 
@@ -72,32 +68,27 @@ def reset_password():
 # register a business
 @app.route('/weconnect/api/v1/businesses', methods=['POST'])
 def register_business():
-    name = request.form.get('name')
-    description = request.form.get('description')
-    category = request.form.get('category')
-    location = request.form.get('location')
-    ownerId = request.form.get('ownerId')
+    content = request.get_json(force=True)
     business = Business()
-    message = business.create_business(name, category, description, location, ownerId)
+    message = business.create_business(content['name'], content['category'],
+    content['description'], content['location'], content['ownerId'])
     return jsonify(message)
 
 
 # updates a business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['PUT'])
-def update_business():
-    name = request.form.get('name')
-    description = request.form.get('description')
-    category = request.form.get('category')
-    location = request.form.get('location')
-    ownerId = request.form.get('ownerId')
+def update_business(businessId):
+    content = request.get_json(force=True)
     business = Business()
-    message = business.update_business(businessId, name, category, description, location, ownerId)
+    message = business.update_business(businessId, content['name'],
+    content['category'], content['description'],
+    content['location'], content['ownerId'])
     return jsonify(message)
 
 
 # removes a business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['DELETE'])
-def remove_business():
+def remove_business(businessId):
     business = Business()
     message = business.delete_business(businessId)
     return jsonify(message)
@@ -107,7 +98,8 @@ def remove_business():
 @app.route('/weconnect/api/v1/businesses', methods=['GET'])
 def retrieve_all_businesses():
     business = Business()
-    business.view_all_businesses()
+    message = business.view_all_businesses()
+    return jsonify(message)
 
 
 # retrieves a single business
@@ -121,12 +113,10 @@ def retrieve_business(businessId):
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
 methods=['POST'])
 def add_review_for(businessId):
-    name = request.form.get('rating')
-    description = request.form.get('body')
-    category = request.form.get('userId')
-    location = request.form.get('businessId')
+    content = request.get_json(force=True)
     review = Review()
-    message = review.add_review(rating, body, userId, businessId)
+    message = review.add_review(content['rating'],
+    content['body'], content['userId'], content['businessId'])
     return jsonify(message)
 
 
