@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class Business(object):
     businesses = []
 
@@ -5,8 +7,9 @@ class Business(object):
         pass
 
     # creates a business
-    def create_business(self, name, category, description, location, ownerId):
+    def add_business(self, name, category, description, location, ownerId):
         self.id = 1
+        self.created_on = str(datetime.now())
         if not len(Business.businesses) == 0:
             self.id = Business.businesses[-1]['id'] + 1
         self.business_dict = {
@@ -16,17 +19,19 @@ class Business(object):
             'description': description,
             'location': location,
             'ownerId': ownerId,
-            'msg': 'okay'
+            'msg': 'okay',
+            'created on': self.created_on
         }
-        Business.businesses.append(self.business_dict)
+        self.businesses.append(self.business_dict)
         return {
-            'id': self.id,
-            'msg': f'Business id {self.id} created successfully'
+            'business': self.business_dict,
+            'msg': 'Business created ok',
+            'created on': self.created_on
         }
 
     # reads a business
     def view_business(self, id):
-        for business in Business.businesses:
+        for business in self.businesses:
             if business['id'] == id:
                 return business
         return {
