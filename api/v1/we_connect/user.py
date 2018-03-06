@@ -3,7 +3,6 @@ from datetime import datetime
 
 class User(object):
     users = []
-    user_logged_in = {}
 
     # creates a new user
     def add_user(self, name, username, email, password):
@@ -20,12 +19,8 @@ class User(object):
             'user': self.user_dict,
             'msg': 'User created ok',
         }
-
-    def view_user(self, username):
-        for user in self.users:
-            if user['username'] == username:
+    @staticmethod
+    def view_user(username_or_email):
+        for user in User.users:
+            if user['username'] == username_or_email or user['email'] == username_or_email:
                 return user
-        return {
-            'id': username,
-            'msg': f'User with {username} not found'
-        }
