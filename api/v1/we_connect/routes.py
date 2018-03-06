@@ -6,6 +6,7 @@ from we_connect.review import Review
 
 app = Flask(__name__)
 
+
 # creates a user account
 @app.route('/weconnect/api/v1/auth/register', methods=['POST'])
 def create_user():
@@ -22,7 +23,7 @@ def login_user():
     if User.user_logged_in:
         return jsonify({
             'msg': 'A user is logged in already'
-        }) 
+        })
     content = request.get_json(force=True)
     message = {}
     for user in User.users:
@@ -34,7 +35,7 @@ def login_user():
                         'msg': 'Log in successfull'}
             User.user_logged_in = user
         if message:
-            return jsonify(message), 201
+            return jsonify(message)
     message = {
         'msg': 'Wrong email-password combination'}
     return jsonify(message)
@@ -46,7 +47,7 @@ def logout():
     if User.user_logged_in == {}:
         return jsonify({
                 'msg': 'No user is logged in currently'})
-    else:          
+    else:
         message = {
                     'id': User.user_logged_in['id'],
                     'name': User.user_logged_in['name'],
@@ -54,7 +55,7 @@ def logout():
                     'msg': 'Log out successfull'}
         User.user_logged_in = {}
         return jsonify(message)
-       
+
 
 # password reset
 @app.route('/weconnect/api/v1/auth/reset-password', methods=['POST'])
@@ -68,7 +69,7 @@ def reset_password():
             user['password'] = content['password']
             return jsonify({'msg': 'Password changed successfully'}), 201
     return jsonify({'msg': 'Email provided is incorrect'})
-    
+
 
 # register a business
 @app.route('/weconnect/api/v1/businesses', methods=['POST'])
@@ -81,7 +82,7 @@ def register_business():
     message = business.add_business(content['name'],
     content['category'], content['description'],
     content['location'], User.user_logged_in['id'])
-    return jsonify(message), 201
+    return jsonify(message)
 
 
 # updates a business
@@ -110,6 +111,7 @@ def delete_business(businessId):
     message = business.delete_business(businessId)
     return jsonify(message)
 
+
 # retrieves all businesses
 @app.route('/weconnect/api/v1/businesses', methods=['GET'])
 def get_all_businesses():
@@ -124,14 +126,17 @@ def get_business(businessId):
     message = business.view_business(businessId)
     return jsonify(message)
 
+
 # adds a review to a business
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
 methods=['POST'])
 def add_review_for(businessId):
+    if not User.user_logged_in:
+        return jsonify({'msg': 'You must log in first'})
     content = request.get_json(force=True)
     review = Review()
     message = review.add_review(content['rating'],
-    content['body'], content['userId'], content['businessId'])
+    content['body'], User.user_logged_in['id'], businessId)
     return jsonify(message)
 
 
