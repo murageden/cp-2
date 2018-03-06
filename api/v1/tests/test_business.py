@@ -20,7 +20,7 @@ class BusinessTestCase(unittest.TestCase):
             self.response_add['business']['id'])
         self.assertIn(self.response_read, Business.businesses)
 
-    def test_updates_a_business_exists(self):
+    def test_updates_a_business__if_exists(self):
         self.response = self.business.add_business(
             'Test Business3', 'Supermarket',
             'Behind Equity Bank', 'Githurai, Nairobi Area', 4)
@@ -28,7 +28,7 @@ class BusinessTestCase(unittest.TestCase):
         self.business.update_business(
             self.response['business']['id'],
             'Modify Business', 'Shop',
-            'Behind Equity Bank', 'Githurai, Nairobi Area', 4)
+            'Behind Equity Bank', 'Eldoret', 4)
 
         self.new_business = self.business.view_business(
             self.response['business']['id'])
@@ -39,8 +39,8 @@ class BusinessTestCase(unittest.TestCase):
 
     def test_deletes_a_business_if_exists(self):
         self.response = self.business.add_business(
-            'Test Business5', 'Supermarket',
-            'Behind Equity Bank', 'Githurai, Nairobi Area', 4)
+            'Test Business4', 'Shop',
+            'Best Prices', 'Mombasa', 4)
 
         self.business.delete_business(
             self.response['business']['id'])
@@ -50,3 +50,15 @@ class BusinessTestCase(unittest.TestCase):
 
         self.assertNotIn(self.business.view_business(
             self.response['business']['id']), Business.businesses)
+
+    def test_search_business_by_location(self):
+        self.response = self.business.search_business_by_location(
+            'Githurai, Nairobi Area')
+
+        self.assertTrue(len(self.response) == 2)
+
+    def test_search_business_by_category(self):
+        self.response = self.business.search_business_by_category(
+            'Supermarket')
+
+        self.assertTrue(len(self.response) == 2)
