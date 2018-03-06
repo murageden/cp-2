@@ -6,7 +6,6 @@ class BusinessTestCase(unittest.TestCase):
     def setUp(self):
         self.business = Business()
 
-
     def test_add_business(self):
         self.response = self.business.add_business(
             'Test Business1', 'Supermarket',
@@ -20,7 +19,6 @@ class BusinessTestCase(unittest.TestCase):
         self.response_read = self.business.view_business(
             self.response_add['business']['id'])
         self.assertIn(self.response_read, Business.businesses)
-
 
     def test_updates_a_business_exists(self):
         self.response = self.business.add_business(
@@ -38,7 +36,6 @@ class BusinessTestCase(unittest.TestCase):
         self.assertFalse(self.new_business['name'] == 'Test Business3')
 
         self.assertIn(self.new_business, Business.businesses)
-
 
     def test_deletes_a_business_if_exists(self):
         self.response = self.business.add_business(
