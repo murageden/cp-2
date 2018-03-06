@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from werkzeug.security import generate_password_hash, check_password_hash
 # local imports
 from we_connect.user import User
 from we_connect.business import Business
@@ -7,13 +8,14 @@ from we_connect.review import Review
 app = Flask(__name__)
 
 
+
 # creates a user account
 @app.route('/weconnect/api/v1/auth/register', methods=['POST'])
 def create_user():
     content = request.get_json(force=True)
     user = User()
-    message = user.add_user(content['name'],
-    content['email'], content['password'])
+    message = user.add_user(content['name'], content['username'],
+    content['email'], generate_password_hash(content['password']))
     return jsonify(message), 201
 
 
