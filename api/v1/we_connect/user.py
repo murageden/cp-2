@@ -6,13 +6,10 @@ class User(object):
     user_logged_in = {}
 
     # creates a new user
-    def add_user(self, name, email, password):
-        self.id = 1
+    def add_user(self, name, username, email, password):
         self.created_on = str(datetime.now())
-        if len(User.users):
-            self.id = User.users[-1]['id'] + 1
         self.user_dict = {
-            'id': self.id,
+            'username': username,
             'name': name,
             'email': email,
             'password': password,
