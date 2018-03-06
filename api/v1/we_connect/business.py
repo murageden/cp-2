@@ -2,29 +2,26 @@ from datetime import datetime
 from we_connect.user import User
 
 
-class Business(object):
+class Business:
+    # list variable to hold all businesses
     businesses = []
 
-    def __init__(self):
-        pass
-
     # creates a business
-    def add_business(self, name, category, description, location, ownerId):
+    def add_business(self, name, category, description, location, owner):
         self.id = 1
         self.user = User()
         self.created_on = str(datetime.now())
-        if not len(Business.businesses) == 0:
-            self.id = Business.businesses[-1]['id'] + 1
+        if not len(self.businesses) == 0:
+            self.id = self.businesses[-1]['id'] + 1
         self.business_dict = {
             'id': self.id,
             'name': name,
             'category': category,
             'description': description,
             'location': location,
-            'owner': self.user.view_user(ownerId),
-            'msg': 'okay',
-            'created on': self.created_on
-        }
+            'owner': User.view_user(owner),
+            'created on': self.created_on}
+
         self.businesses.append(self.business_dict)
         return {
             'business': self.business_dict,
@@ -34,43 +31,25 @@ class Business(object):
     # reads a business
     def view_business(self, id):
         for business in Business.businesses:
-            if business['id'] == id:
+            if str(business['id']) == str(id):
                 return business
-        return {
-            'id': id,
-            'msg': f'Business id {id} not found'
-        }
 
     # updates a business
     def update_business(self, id, name, category,
-    description, location, ownerId):
-        self.response = self.view_business(id)
-        if self.response['msg'] == 'okay':
-            if not self.response['ownerId'] == ownerId:
-                return {
-                    'status': 'error',
-                    'msg': 'You cannot update this business'
-                }
-            self.response['name'] = name
-            self.response['category'] = category
-            self.response['description'] = description
-            self.response['location'] = location
-            return {
-                'id': id,
-                'msg': f'Business id {id} modified successfully'
-            }
-            return self.response
+    description, location, owner):
+        self.to_update = self.view_business(id)
+        if self.to_update:
+            self.to_update['name'] = name
+            self.to_update['category'] = category
+            self.to_update['description'] = description
+            self.to_update['location'] = location
 
     # deletes a business
     def delete_business(self, id):
-        self.response = self.view_business(id)
-        if self.response['msg'] == 'okay':
-            Business.businesses.remove(self.response)
-            return {
-                'id': self.response['id'],
-                'msg': f'Business id {self.response["id"]} deleted successfully'
-            }
-        return self.response
+        self.to_remove = self.view_business(id)
+
+        if self.to_remove:
+            Business.businesses.remove(self.to_remove)
 
     # return businesses by loaction
     def search_business_by_location(self, location):
