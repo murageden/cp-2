@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 # local imports
 from we_connect.user import User
@@ -8,6 +9,28 @@ from we_connect.review import Review
 app = Flask(__name__)
 
 
+# decorator for authentication
+def auth_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+
+        if not token:
+            return jsonify({'message': 'Token is missing, login to get token'}), 401
+        try:
+            data = jwt.decode(token, 'my_secret_key')
+            for user in User.users:
+                if data['username'] == user['username']:
+                    current_user = user
+            if not current_user:
+                return jsonify({"message": "Token Expired"})  
+        except:
+            return jsonify({'message': 'Token is invalid/Expired!. Log in to get another'}), 401
+
+        return f(current_user, *args, **kwargs)
+    return decorated
 
 # creates a user account
 @app.route('/weconnect/api/v1/auth/register', methods=['POST'])
@@ -22,25 +45,21 @@ def create_user():
 # logs in a user
 @app.route('/weconnect/api/v1/auth/login', methods=['POST'])
 def login_user():
-    if User.user_logged_in:
-        return jsonify({
-            'msg': 'A user is logged in already'
-        })
     content = request.get_json(force=True)
     message = {}
     for user in User.users:
-        if user['email'] == content['email'] and user['password'] == content['password']:
-            message = {
-                        'id': user['id'],
-                        'name': user['name'],
-                        'email': user['email'],
-                        'msg': 'Log in successfull'}
-            User.user_logged_in = user
+        if user['email'] == content['email'] and check_password_hash(
+            user['password'], content['password']):
+                message = {
+                            'id': user['username'],
+                            'name': user['name'],
+                            'email': user['email'],
+                            'msg': 'Log in successfull'}
         if message:
-            return jsonify(message)
+            return jsonify(message), 201
     message = {
         'msg': 'Wrong email-password combination'}
-    return jsonify(message)
+    return jsonify(message), 401
 
 
 # logs out a user
@@ -76,15 +95,12 @@ def reset_password():
 # register a business
 @app.route('/weconnect/api/v1/businesses', methods=['POST'])
 def register_business():
-    if User.user_logged_in == {}:
-        return jsonify({
-                'msg': 'You must log in first'})
     content = request.get_json(force=True)
     business = Business()
     message = business.add_business(content['name'],
     content['category'], content['description'],
-    content['location'], User.user_logged_in['id'])
-    return jsonify(message)
+    content['location'], current_user['username'])
+    return jsonify(message), 201
 
 
 # updates a business
