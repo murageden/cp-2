@@ -6,6 +6,7 @@ from we_connect.routes import app
 from we_connect.user import User
 from we_connect.business import Business
 
+
 class EndpointsTestCase(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
@@ -33,54 +34,97 @@ class EndpointsTestCase(unittest.TestCase):
             "location": "Nairobi"
         }
         self.new_business = {
-            "name": "Test Business",
+            "name": "New Business",
             "description": "The best place to shop",
-            "category": "supermarket",
+            "category": "shop",
             "location": "Nairobi"
         }
 
     def test_create_user_endpoint(self):
-        response = self.client.post('/weconnect/api/v1/auth/register',
+        self.response = self.client.post('/weconnect/api/v1/auth/register',
                     data=json.dumps(self.test_user),
                     headers={'content-type': 'application/json'})
-        self.assertEqual(response.status_code, 201)
-        self.assertIn("Test User", str(response.data))
+        self.assertEqual(self.response.status_code, 201)
+        self.assertIn("Test User", str(self.response.data))
 
     def test_login_user_endpoint(self):
-        response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/weconnect/api/v1/auth/login',
         data=json.dumps(self.test_login),
         headers={'content-type': 'application/json'})
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(self.response.status_code, 200)
         self.assertEqual(self.test_user['email'], User.user_logged_in['email'])
 
     def test_bad_login_returns_error_msg(self):
-        response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/weconnect/api/v1/auth/login',
         data=json.dumps(self.test_login),
         headers={'content-type': 'application/json'})
-        self.assertIn("Wrong", str(response.data))
-    
-    ## tests for business endpoints
+        self.assertIn("Wrong", str(self.response.data))
+
+    # tests for business endpoints
+
     def test_register_business_endpoint(self):
-        response = self.client.post('/weconnect/api/v1/businesses',
+        self.client.post('/weconnect/api/v1/auth/login',
+                    data=json.dumps(self.test_login),
+                    headers={'content-type': 'application/json'})
+        self.response = self.client.post('/weconnect/api/v1/businesses',
                     data=json.dumps(self.test_business),
                     headers={'content-type': 'application/json'})
-        self.assertEqual(response.status_code, 201)
-        self.assertIn("Test Business", str(response.data))
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn("Test Business", str(self.response.data))
 
-    def test_register_buiness_when_not_logged_in_returns_msg(self):
-        response_logout = self.client.post('/weconnect/api/v1/auth/logout',
+    # Also aplies to registration of a business when not logged in
+    def test_register_business_when_not_logged_in_returns_msg(self):
+        self.client.post('/weconnect/api/v1/auth/logout',
                     data=json.dumps({}),
                     headers={'content-type': 'application/json'})
-        response_reg = self.client.post('/weconnect/api/v1/businesses',
+        self.response = self.client.post('/weconnect/api/v1/businesses',
                     data=json.dumps(self.test_business),
                     headers={'content-type': 'application/json'})
-        self.assertIn("You must log in first", str(response_reg.data))
+        self.assertIn("You must log in first", str(self.response.data))
 
     def test_update_business_endpoint(self):
-        response_login = self.client.post('/weconnect/api/v1/auth/login',
-        data=json.dumps(self.test_login),
-        headers={'content-type': 'application/json'})
-        response_update = self.client.post(
-            f'/weconnect/api/v1/businesses/1',
+        self.client.post('/weconnect/api/v1/auth/login',
+                    data=json.dumps(self.test_login),
+                    headers={'content-type': 'application/json'})
+        self.client.post('/weconnect/api/v1/businesses',
+                    data=json.dumps(self.test_business),
+                    headers={'content-type': 'application/json'})
+        response = self.client.put('/weconnect/api/v1/businesses/1',
                     data=json.dumps(self.new_business),
                     headers={'content-type': 'application/json'})
+        self.assertIn("New Business", str(response.data))
+
+    def test_update_business_returns_error_if_business_not_exists(self):
+        self.client.post('/weconnect/api/v1/auth/login',
+                    data=json.dumps(self.test_login),
+                    headers={'content-type': 'application/json'})
+        self.client.post('/weconnect/api/v1/businesses',
+                    data=json.dumps(self.test_business),
+                    headers={'content-type': 'application/json'})
+        response = self.client.put('/weconnect/api/v1/businesses/1000',
+                    data=json.dumps(self.new_business),
+                   headers={'content-type': 'application/json'})
+        self.assertIn("not found", str(response.data))
+
+    def test_deletes_business_if_exists(self):
+        self.client.post('/weconnect/api/v1/auth/login',
+                    data=json.dumps(self.test_login),
+                    headers={'content-type': 'application/json'})
+        self.client.post('/weconnect/api/v1/businesses',
+                    data=json.dumps(self.test_business),
+                    headers={'content-type': 'application/json'})
+        response = self.client.delete('/weconnect/api/v1/businesses/1',
+                    data=json.dumps(self.new_business),
+                    headers={'content-type': 'application/json'})
+        self.assertIn("deleted", str(response.data))
+
+    def test_create_review_endpoint(self):
+        #register a user
+
+        #log in the user
+
+        #register a business for this user
+
+        #create review for this business
+
+        #check whether this review exists in reviews data structure
