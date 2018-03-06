@@ -8,5 +8,5 @@ class UserTestCase(unittest.TestCase):
 
     def test_create_user(self):
         self.response = self.user.add_user(
-            'Test User', 'test@user.com', '1234pass')
+            'Test User', 'test@user.com', 'test_user', '1234pass')
         self.assertIn(self.response['user'], User.users)
