@@ -21,11 +21,11 @@ class User(object):
             'msg': 'User created ok',
         }
 
-    def view_user(self, id):
+    def view_user(self, username):
         for user in self.users:
-            if user['id'] == id:
+            if user['username'] == username:
                 return user
         return {
-            'id': id,
-            'msg': f'User id {id} not found'
+            'id': username,
+            'msg': f'User with {username} not found'
         }
