@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 class User(object):
     users = []
     user_logged_in = {}
@@ -22,7 +23,7 @@ class User(object):
             'user': self.user_dict,
             'msg': 'User created ok',
         }
-    
+
     def view_user(self, id):
         for user in self.users:
             if user['id'] == id:
