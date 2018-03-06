@@ -14,6 +14,7 @@ class EndpointsTestCase(unittest.TestCase):
         ## test data for a test user
         self.test_user = {
             "name": "Test User",
+            'username': 'test_user',
             "email": "test@user.com",
             "password": "1234pass"
         }
@@ -51,8 +52,7 @@ class EndpointsTestCase(unittest.TestCase):
         self.response = self.client.post('/weconnect/api/v1/auth/login',
         data=json.dumps(self.test_login),
         headers={'content-type': 'application/json'})
-        self.assertEqual(self.response.status_code, 200)
-        self.assertEqual(self.test_user['email'], User.user_logged_in['email'])
+        self.assertEqual(self.response.status_code, 201)
 
     def test_bad_login_returns_error_msg(self):
         self.response = self.client.post('/weconnect/api/v1/auth/login',
@@ -118,13 +118,4 @@ class EndpointsTestCase(unittest.TestCase):
                     headers={'content-type': 'application/json'})
         self.assertIn("deleted", str(response.data))
 
-    def test_create_review_endpoint(self):
-        #register a user
-
-        #log in the user
-
-        #register a business for this user
-
-        #create review for this business
-
-        #check whether this review exists in reviews data structure
+        
