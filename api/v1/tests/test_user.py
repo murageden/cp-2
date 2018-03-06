@@ -10,5 +10,3 @@ class UserTestCase(unittest.TestCase):
         self.response = self.user.add_user(
             'Test User', 'test@user.com', '1234pass')
         self.assertIn(self.response['user'], User.users)
-
-
