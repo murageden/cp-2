@@ -50,15 +50,24 @@ class Business:
 
         if self.to_remove:
             Business.businesses.remove(self.to_remove)
+            return self.to_remove
 
     # return businesses by loaction
     def search_business_by_location(self, location):
-        pass
+        self.in_this_location = []
+
+        for business in Business.businesses:
+            if business['location'] == location:
+                self.in_this_location.append(business)
+
+        return self.in_this_location
 
     # return businesses by category
-    def search_business_by_location(self, location):
-        pass
+    def search_business_by_category(self, category):
+        self.in_this_categ = []
 
-    # return all businesses
-    def view_all_businesses(self):
-        return Business.businesses
+        for business in Business.businesses:
+            if business['category'] == category:
+                self.in_this_categ.append(business)
+
+        return self.in_this_categ
