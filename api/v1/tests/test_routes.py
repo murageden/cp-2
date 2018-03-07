@@ -36,7 +36,7 @@ class EndpointsTestCase(unittest.TestCase):
         }
         
         self.new_business = {
-                "name": "Update Test Biz",
+                "name": "Updated Biz",
                 "category": "supermarket",
                 "description": "The best prices in town",
                 "location": "TRM"
@@ -100,7 +100,7 @@ class EndpointsTestCase(unittest.TestCase):
                     headers={'content-type': 'application/json',
                     'x-access-token': self.token})
         self.j_response = json.loads(self.response.data)
-        self.assertTrue(self.response.status_code == 201)
+        self.assertIn('Updated Biz', str(self.j_response))
         self.assertIn(self.j_response, Business.businesses)
 
     def test_update_business_without_token_returns_error(self):
