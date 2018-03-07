@@ -23,6 +23,11 @@ class EndpointsTestCase(unittest.TestCase):
                 "password": "1234usr"
         }
 
+        self.test_bad_login = {
+                "username": "test2",
+                "password": "5678usr"
+        }
+
     def test_create_user_endpoint(self):
         self.response = self.client.post('/weconnect/api/v1/auth/register',
 
@@ -50,3 +55,13 @@ class EndpointsTestCase(unittest.TestCase):
 
         self.assertEqual(user['email'], self.test_user['email'])
 
+    def test_bad_login_returns_a_msg(self):
+        self.response = self.client.post('/weconnect/api/v1/auth/login',
+
+                    data=json.dumps(self.test_bad_login),
+
+                    headers={'content-type': 'application/json'})
+
+        self.j_response = json.loads(self.response.data)
+
+        self.assertIn('Wrong', self.j_response['msg'])
