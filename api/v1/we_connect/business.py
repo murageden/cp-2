@@ -35,15 +35,14 @@ class Business:
     # updates a business
     def update_business(self, id, name, category, description, location):
         self.to_update = self.view_business(id)
+        
         if self.to_update:
             self.to_update['name'] = name
             self.to_update['category'] = category
             self.to_update['description'] = description
             self.to_update['location'] = location
-            return {
-                'business': self.view_business(id),
-                'msg': 'Business updated ok'
-            }
+
+            return self.view_business(id)
 
     # deletes a business
     def delete_business(self, id):
