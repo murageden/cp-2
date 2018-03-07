@@ -70,7 +70,7 @@ def login_user():
 
     if not user:
         return jsonify({
-            'msg': 'Wrong email or username/password combination'}), 401
+            'msg': 'Wrong email or username/password combination'}), 400
 
     if check_password_hash(user['password'], content['password']):
         token = jwt.encode({
