@@ -1,7 +1,5 @@
 import unittest
-import json
-
-from flask import jsonify
+from flask import jsonify, json
 from we_connect.routes import app
 from we_connect.user import User
 from we_connect.business import Business
@@ -19,7 +17,7 @@ class EndpointsTestCase(unittest.TestCase):
             "password": "1234pass"
         }
         self.test_login = {
-            "email": "test@user.com",
+            "username": "test_user",
             "password": "1234pass"
         }
         self.bad_login = {
