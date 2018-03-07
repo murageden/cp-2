@@ -4,8 +4,9 @@ python:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
+  - pip install coveralls
 
 # command to run tests
-script: pytest
+script:  nosetests api/v1/tests --with-coverage --cover-package=we_connect
 
 after_success: coveralls
