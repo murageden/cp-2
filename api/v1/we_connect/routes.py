@@ -207,9 +207,9 @@ def add_review_for(current_user, businessId):
 
     content = request.get_json(force=True)
 
-    business = business.view_business(businessId)
+    to_review = business.view_business(businessId)
 
-    if not business:
+    if not to_review:
         return jsonify({'msg': 'Business id is incorrect'}), 400
 
 
@@ -223,14 +223,14 @@ def add_review_for(current_user, businessId):
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
 methods=['GET'])
 def get_reviews_for(businessId):
-    business = business.view_business(businessId)
+    business.view_business(businessId)
 
     if not business:
         return jsonify({'msg': 'Business id is incorrect'}), 400
 
     reviews = review.view_reviews_for(businessId)
 
-    if not len(reviews):
+    if not reviews:
         return jsonify({'msg': 'No reviews for this business'}), 200
 
-    return jsonify(message), 200
+    return jsonify(reviews), 200
