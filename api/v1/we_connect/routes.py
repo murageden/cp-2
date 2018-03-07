@@ -25,13 +25,13 @@ def token_required(f):
             token = request.headers['x-access-token']
 
         if not token:
-            return jsonify({'message': 'Token is missing!'}), 401
+            return jsonify({'msg': 'Token is missing'}), 401
 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
             current_user = User.view_user(data['username'])
         except:
-            return jsonify({'message': 'Token is invalid!'}), 401
+            return jsonify({'msg': 'Token is invalid'}), 401
 
         return f(current_user, *args, **kwargs)
 
