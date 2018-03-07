@@ -1,0 +1,61 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/
+
+# WeConnect
+
+WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with
+
+## Businesses [/v1/businesses]
+
+### List All Businesses [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "question": "Favourite programming language?",
+                "published_at": "2015-08-05T08:40:51.620Z",
+                "choices": [
+                    {
+                        "choice": "Swift",
+                        "votes": 2048
+                    }, {
+                        "choice": "Python",
+                        "votes": 1024
+                    }, {
+                        "choice": "Objective-C",
+                        "votes": 512
+                    }, {
+                        "choice": "Ruby",
+                        "votes": 256
+                    }
+                ]
+            }
+        ]
+
+### Create a New User Acount [POST]
+
+This action creates a user. It takes a JSON object containing details of the user; Full Name, Email, Username and Password
+
++ Request (application/json)
+
+        {
+            "name": "Full Name",
+            "email": "fullname@email.com",
+            "username": "fullna40",
+            "password": "1234pass"
+        }
+
++ Response 201 (application/json)
+
+
+    + Body
+
+            {
+                "created_on": "",
+                "id": "",
+                "name": "Full Name",
+                "email": "fullname@email.com",
+                "username": "fullna40",
+                "password": "hashed password"
+            }
