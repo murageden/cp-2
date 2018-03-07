@@ -4,6 +4,10 @@
 WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with
 
 
+## Documentation
+See full documentation [here](https://weconnnect.docs.apiary.io/)
+
+
 ## Installation
 ### Required
 * Git: [Installing Git on Linux, Mac OS X and Windows](https://gist.github.com/derhuerst/1b15ff4652a867391f03)
@@ -40,7 +44,7 @@ source venv/bin/activate
 Run `pip install requirements.txt`
 
 
-### Run the API on Your Localhost
+### Run the API on Localhost
 ```bash
 export FLASK_APP=api/v1/we_connect/routes.py
 flask run
