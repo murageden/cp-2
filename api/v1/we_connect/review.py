@@ -9,9 +9,9 @@ class Review(object):
         pass
 
     # adds a review
-    def add_review(self, rating, body, userId, businessId):
+    def add_review(self, rating, body, username, businessId):
         self.id = 1
-        self.user = User()
+
         self.created_on = str(datetime.now())
 
         if not len(Review.reviews) == 0:
@@ -21,17 +21,14 @@ class Review(object):
             'id': self.id,
             'rating': rating,
             'body': body,
-            'review by': User.view_user(userId),
+            'review by': User.view_user(username),
             'businessId': businessId,
             'created on': self.created_on
         }
 
         self.reviews.append(self.review_dict)
 
-        return {
-            'review': self.review_dict,
-            'msg': "Review created ok"
-        }
+        return self.review_dict
 
     # view a business' review
     def view_reviews_for(self, businessId):
