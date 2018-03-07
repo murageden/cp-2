@@ -49,4 +49,3 @@ Run `pip install requirements.txt`
 export FLASK_APP=api/v1/we_connect/routes.py
 flask run
 ```
-
