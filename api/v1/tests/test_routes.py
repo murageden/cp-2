@@ -95,7 +95,13 @@ class EndpointsTestCase(unittest.TestCase):
                     data=json.dumps(self.test_login),
                     headers={'content-type': 'application/json'})
         self.token = json.loads(self.response.data)['token']
-        self.response = self.client.put('/weconnect/api/v1/businesses/1',
+        self.response = self.client.post('/weconnect/api/v1/businesses',
+                    data=json.dumps(self.test_business),
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.token})
+        self.j_response = json.loads(self.response.data)
+        self.response = self.client.put(
+            f'/weconnect/api/v1/businesses/{self.j_response["id"]}',
                     data=json.dumps(self.new_business),
                     headers={'content-type': 'application/json',
                     'x-access-token': self.token})
