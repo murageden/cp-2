@@ -12,7 +12,7 @@ class reviewTestCase(unittest.TestCase):
         self.response = self.review.add_review(
             4, "Nice place for holidays", 4, 1)
 
-        self.assertIn(self.response['review'], Review.reviews)
+        self.assertIn(self.response, Review.reviews)
 
     def test_returns_all_reviews_for_business(self):
         self.review.add_review(
