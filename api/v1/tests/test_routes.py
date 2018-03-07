@@ -34,14 +34,13 @@ class EndpointsTestCase(unittest.TestCase):
                 "description": "The best prices in town",
                 "location": "TRM"
         }
-        
+
         self.new_business = {
                 "name": "Updated Biz",
                 "category": "supermarket",
                 "description": "The best prices in town",
                 "location": "TRM"
         }
-
 
     def test_create_user_endpoint(self):
         self.response = self.client.post('/weconnect/api/v1/auth/register',
