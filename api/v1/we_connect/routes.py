@@ -107,54 +107,88 @@ def reset_password():
 @app.route('/weconnect/api/v1/businesses', methods=['POST'])
 @token_required
 def register_business(current_user):
+    if not current_user:
+        return jsonify({'msg': 'Log in to get a fresh token'}), 400
+
     content = request.get_json(force=True)
+
     business = Business()
+
     message = business.add_business(content['name'],
     content['category'], content['description'],
     content['location'], current_user['username'])
+
     return jsonify(message), 201
 
 
 # updates a business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['PUT'])
-def update_business(businessId):
-    if User.user_logged_in == {}:
-        return jsonify({
-                'msg': 'You must log in first'})
+@token_required
+def update_business(current_user, businessId):
     content = request.get_json(force=True)
+
     business = Business()
+
+    to_update = business.view_business(businessId)
+
+    if to_update:
+        if not to_update['owner'] == current_user:
+            return jsonify({'msg': 'You are not allowed to edit this business'}), 403
+
     message = business.update_business(
         businessId, content['name'], content['category'],
-        content['description'], content['location'],
-        User.user_logged_in['id'])
+        content['description'], content['location'])
+
+    if not message:
+        return jsonify({'msg': 'Business id is incorrect'}), 400
+
     return jsonify(message), 201
 
 
 # removes a business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['DELETE'])
-def delete_business(businessId):
-    if User.user_logged_in == {}:
-        return jsonify({
-                'msg': 'You must log in first'})
+@token_required
+def delete_business(current_user, businessId):
     content = request.get_json(force=True)
+
     business = Business()
+
+    to_delete = business.view_business(businessId)
+
+    if to_delete:
+        if not to_delete['owner'] == current_user:
+            return jsonify({'msg': 'You are not allowed to delete this business'}), 403
+    
     message = business.delete_business(businessId)
-    return jsonify(message)
+
+    if not message:
+        return jsonify({'msg': 'Business id is incorrect'}), 400
+
+    return jsonify(message), 201
 
 
 # retrieves all businesses
 @app.route('/weconnect/api/v1/businesses', methods=['GET'])
 def get_all_businesses():
     businesses = Business.businesses
-    jsonify(businesses)
+
+    if not len(businesses):
+        return jsonify({'msg': 'No businesses yet'}), 200
+
+    return jsonify(businesses), 200
 
 
 # retrieves a single business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['GET'])
 def get_business(businessId):
     business = Business()
+
     message = business.view_business(businessId)
-    return jsonify(message)
+
+    if not message:
+        return jsonify({'msg': 'Business id is incorrect'}), 400
+
+    return jsonify(message), 200
 
 
 # adds a review to a business
