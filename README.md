@@ -3,19 +3,23 @@
 ## About
 WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with
 
+
 ## Installation
 ### Required
-⋅⋅* Git: [Installing Git on Linux, Mac OS X and Windows](https://gist.github.com/derhuerst/1b15ff4652a867391f03)
-⋅⋅* Python: [Python Download and Installation Instructions](https://www.ics.uci.edu/~pattis/common/handouts/pythoneclipsejava/python.html)
-⋅⋅* Pip: [Python & pip Windows installation](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
-⋅⋅* Virtualenv: [Installation — virtualenv 15.1.0 documentation](https://virtualenv.pypa.io/en/stable/installation/)
+* Git: [Installing Git on Linux, Mac OS X and Windows](https://gist.github.com/derhuerst/1b15ff4652a867391f03)
+* Python: [Python Download and Installation Instructions](https://www.ics.uci.edu/~pattis/common/handouts/pythoneclipsejava/python.html)
+* Pip: [Python & pip Windows installation](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
+* Virtualenv: [Installation — virtualenv 15.1.0 documentation](https://virtualenv.pypa.io/en/stable/installation/)
 
-### Initialize a repository
+
+### Initialize a Local Repository
 Run `git init` on a terminal
 
-### Clone this repository
+
+### Clone This Repository
 Run `git clone https://github.com/murageden/bootcamp.git`
 Run `cd bootcamp/`
+
 
 ### Set up Virtual Environment
 Run the following code on a Windows terminal:
@@ -31,10 +35,12 @@ virtualenv venv
 source venv/bin/activate
 ```
 
-### Install requirements
+
+### Install Requirements
 Run `pip install requirements.txt`
 
-### Run the api on localhost
+
+### Run the API on Your Localhost
 ```bash
 export FLASK_APP=api/v1/we_connect/routes.py
 flask run
