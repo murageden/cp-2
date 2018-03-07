@@ -35,7 +35,7 @@ class EndpointsTestCase(unittest.TestCase):
                 "location": "TRM"
         }
         
-        self.test_update_business = {
+        self.new_business = {
                 "name": "Update Test Biz",
                 "category": "supermarket",
                 "description": "The best prices in town",
@@ -45,149 +45,99 @@ class EndpointsTestCase(unittest.TestCase):
 
     def test_create_user_endpoint(self):
         self.response = self.client.post('/weconnect/api/v1/auth/register',
-
                     data=json.dumps(self.test_user),
-
                     headers={'content-type': 'application/json'})
-
         self.assertEqual(self.response.status_code, 201)
         self.assertIn("Test Name", str(self.response.data))
 
     def test_login_user_endpoint(self):
         self.response = self.client.post('/weconnect/api/v1/auth/login',
-
                     data=json.dumps(self.test_login),
-
                     headers={'content-type': 'application/json'})
-
-        self.j_response = json.loads(self.response.data)
-
-        data = jwt.decode(self.j_response['token'], app.config['SECRET_KEY'])
-
+        self.token = json.loads(self.response.data)['token']
+        data = jwt.decode(self.token, app.config['SECRET_KEY'])
         user = User.view_user(data['username'])
-
         self.assertTrue(self.response.status_code == 201)
-
         self.assertEqual(user['email'], self.test_user['email'])
 
     def test_bad_login_returns_a_msg(self):
         self.response = self.client.post('/weconnect/api/v1/auth/login',
-
                     data=json.dumps(self.test_bad_login),
-
                     headers={'content-type': 'application/json'})
-
         self.j_response = json.loads(self.response.data)
-
         self.assertTrue(self.response.status_code == 400)
-
         self.assertIn('Wrong', self.j_response['msg'])
 
     def test_register_business(self):
         self.response = self.client.post('/weconnect/api/v1/auth/login',
-
                     data=json.dumps(self.test_login),
-
                     headers={'content-type': 'application/json'})
-
-        self.j_response = json.loads(self.response.data)
-
+        self.token = json.loads(self.response.data)['token']
         self.response = self.client.post('/weconnect/api/v1/businesses',
-
                     data=json.dumps(self.test_business),
-
                     headers={'content-type': 'application/json',
-                    'x-access-token': self.j_response['token']})
-
+                    'x-access-token': self.token})
         self.j_response = json.loads(self.response.data)
-
         self.assertTrue(self.response.status_code == 201)
-
         self.assertIn(self.j_response, Business.businesses)
 
     def test_register_business_without_token_returns_error(self):
         self.response = self.client.post('/weconnect/api/v1/businesses',
-
                     data=json.dumps(self.test_business),
-
                     headers={'content-type': 'application/json'})
-
         self.j_response = json.loads(self.response.data)
-
         self.assertTrue(self.response.status_code == 401)
-
         self.assertIn('Token is missing', self.j_response['msg'])
-
         self.assertNotIn(self.j_response, Business.businesses)
 
     def test_update_business(self):
         self.response = self.client.post('/weconnect/api/v1/auth/login',
-
                     data=json.dumps(self.test_login),
-
                     headers={'content-type': 'application/json'})
-
-        self.j_response = json.loads(self.response.data)
-
+        self.token = json.loads(self.response.data)['token']
         self.response = self.client.put('/weconnect/api/v1/businesses/1',
-
-                    data=json.dumps(self.test_update_business),
-
+                    data=json.dumps(self.new_business),
                     headers={'content-type': 'application/json',
-                    'x-access-token': self.j_response['token']})
-
+                    'x-access-token': self.token})
         self.j_response = json.loads(self.response.data)
-
         self.assertTrue(self.response.status_code == 201)
-
         self.assertIn(self.j_response, Business.businesses)
 
     def test_update_business_without_token_returns_error(self):
         self.response = self.client.put('/weconnect/api/v1/businesses/1',
-
-                    data=json.dumps(self.test_update_business),
-
+                    data=json.dumps(self.new_business),
                     headers={'content-type': 'application/json'})
-
         self.j_response = json.loads(self.response.data)
-
         self.assertTrue(self.response.status_code == 401)
-
         self.assertIn('Token is missing', self.j_response['msg'])
-
         self.assertNotIn(self.j_response, Business.businesses)
 
     def test_deletes_business(self):
         self.response = self.client.post('/weconnect/api/v1/auth/login',
-
                     data=json.dumps(self.test_login),
-
                     headers={'content-type': 'application/json'})
-
-        self.j_response = json.loads(self.response.data)
-
-        self.response = self.client.delete('/weconnect/api/v1/businesses/1',
-
-                    data=json.dumps({}),
-
+        self.token = json.loads(self.response.data)['token']
+        self.resp_reg = self.client.post('/weconnect/api/v1/businesses',
+                    data=json.dumps(self.test_business),
                     headers={'content-type': 'application/json',
-                    'x-access-token': self.j_response['token']})
-
-        self.j_response = json.loads(self.response.data)
-
+                    'x-access-token': self.token})
+        self.js_resp = json.loads(self.resp_reg.data)
+        self.length1 = len(Business.businesses)
+        self.response = self.client.delete(
+            f'/weconnect/api/v1/businesses/{self.js_resp["id"]}',
+                    data=json.dumps({}),
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.token})
+        self.length2 = len(Business.businesses)
+        self.assertTrue(self.length2 < self.length1)
         self.assertTrue(self.response.status_code == 201)
-
+        self.j_response = json.loads(self.response.data)
         self.assertNotIn(self.j_response, Business.businesses)
 
     def test_delete_business_without_token_returns_error(self):
         self.response = self.client.delete('/weconnect/api/v1/businesses/1',
-
                     data=json.dumps({}),
-
                     headers={'content-type': 'application/json'})
-
         self.j_response = json.loads(self.response.data)
-
         self.assertTrue(self.response.status_code == 401)
-
         self.assertIn('Token is missing', self.j_response['msg'])
