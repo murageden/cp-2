@@ -10,14 +10,14 @@ class BusinessTestCase(unittest.TestCase):
         self.response = self.business.add_business(
             'Test Business1', 'Supermarket',
             'Behind Equity Bank', 'Githurai, Nairobi Area', 4)
-        self.assertIn(self.response['business'], Business.businesses)
+        self.assertIn(self.response, Business.businesses)
 
     def test_returns_a_business_if_business_exists(self):
         self.response_add = self.business.add_business(
             'Test Business2', 'Supermarket',
             'Behind Equity Bank', 'Githurai, Nairobi Area', 4)
         self.response_read = self.business.view_business(
-            self.response_add['business']['id'])
+            self.response_add['id'])
         self.assertIn(self.response_read, Business.businesses)
 
     def test_updates_a_business__if_exists(self):
@@ -26,12 +26,12 @@ class BusinessTestCase(unittest.TestCase):
             'Behind Equity Bank', 'Githurai, Nairobi Area', 4)
 
         self.business.update_business(
-            self.response['business']['id'],
+            self.response['id'],
             'Modify Business', 'Shop',
             'Behind Equity Bank', 'Eldoret')
 
         self.new_business = self.business.view_business(
-            self.response['business']['id'])
+            self.response['id'])
 
         self.assertFalse(self.new_business['name'] == 'Test Business3')
 
@@ -43,13 +43,13 @@ class BusinessTestCase(unittest.TestCase):
             'Best Prices', 'Mombasa', 4)
 
         self.business.delete_business(
-            self.response['business']['id'])
+            self.response['id'])
 
         self.assertFalse(self.business.view_business(
-            self.response['business']['id']))
+            self.response['id']))
 
         self.assertNotIn(self.business.view_business(
-            self.response['business']['id']), Business.businesses)
+            self.response['id']), Business.businesses)
 
     def test_search_business_by_location(self):
         self.response = self.business.search_business_by_location(
