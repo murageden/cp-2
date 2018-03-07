@@ -2,16 +2,16 @@ from datetime import datetime
 from we_connect.user import User
 
 
-class Review(object):
+class Review:
+    """ a variable to hold all the reviews"""
     reviews = []
 
-    def __init__(self):
-        pass
-
-    # adds a review
     def add_review(self, rating, body, username, businessId):
+        """
+            creates a review for a business and adds it to the list of review
+            returns the added review
+        """
         self.id = 1
-
         self.created_on = str(datetime.now())
 
         if not len(Review.reviews) == 0:
@@ -23,20 +23,15 @@ class Review(object):
             'body': body,
             'review by': User.view_user(username),
             'businessId': businessId,
-            'created on': self.created_on
-        }
-
+            'created on': self.created_on}
         self.reviews.append(self.review_dict)
-
         return self.review_dict
 
-    # view a business' review
     def view_reviews_for(self, businessId):
+        """ reads a single review from teh reviews"""
         reviews_for = []
-
         for review in Review.reviews:
             if review['businessId'] == businessId:
                 reviews_for.append(review)
-
         if reviews_for:
             return reviews_for

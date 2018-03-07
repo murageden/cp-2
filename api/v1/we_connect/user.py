@@ -1,11 +1,15 @@
 from datetime import datetime
 
 
-class User(object):
+class User:
+    """ class variable to hold all users """
     users = []
 
-    # creates a new user
     def add_user(self, name, username, email, password):
+        """
+            creates a user and adds user into the users' list
+            returns the added user
+        """
         self.created_on = str(datetime.now())
         
         self.user_dict = {
@@ -19,9 +23,9 @@ class User(object):
         
         return self.user_dict
     
-    # reads a user 
     @staticmethod
     def view_user(username_or_email):
+        """ reads a user by their username or email """
         for user in User.users:
             if user['username'] == username_or_email or user['email'] == username_or_email:
                 return user
