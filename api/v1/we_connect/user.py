@@ -7,6 +7,7 @@ class User(object):
     # creates a new user
     def add_user(self, name, username, email, password):
         self.created_on = str(datetime.now())
+        
         self.user_dict = {
             'username': username,
             'name': name,
@@ -15,10 +16,10 @@ class User(object):
             'created on': self.created_on
             }
         self.users.append(self.user_dict)
-        return {
-            'user': self.user_dict,
-            'msg': 'User created ok',
-        }
+        
+        return self.user_dict
+    
+    # reads a user 
     @staticmethod
     def view_user(username_or_email):
         for user in User.users:
