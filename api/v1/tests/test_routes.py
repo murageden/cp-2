@@ -156,3 +156,45 @@ class EndpointsTestCase(unittest.TestCase):
         self.assertIn('Token is missing', self.j_response['msg'])
 
         self.assertNotIn(self.j_response, Business.businesses)
+
+    def test_deletes_business(self):
+        self.response = self.client.post('/weconnect/api/v1/auth/login',
+
+                    data=json.dumps(self.test_login),
+
+                    headers={'content-type': 'application/json'})
+
+        self.j_response = json.loads(self.response.data)
+
+        self.client.post('/weconnect/api/v1/businesses',
+
+                    data=json.dumps(self.test_business),
+
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.j_response['token']})
+
+        self.response = self.client.delete('/weconnect/api/v1/businesses/1',
+
+                    data=json.dumps({}),
+
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.j_response['token']})
+
+        self.j_response = json.loads(self.response.data)
+
+        self.assertTrue(self.response.status_code == 201)
+
+        self.assertNotIn(self.j_response, Business.businesses)
+
+    def test_delete_business_without_token_returns_error(self):
+        self.response = self.client.delete('/weconnect/api/v1/businesses/1',
+
+                    data=json.dumps({}),
+
+                    headers={'content-type': 'application/json'})
+
+        self.j_response = json.loads(self.response.data)
+
+        self.assertTrue(self.response.status_code == 401)
+
+        self.assertIn('Token is missing', self.j_response['msg'])
