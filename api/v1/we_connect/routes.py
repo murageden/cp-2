@@ -15,6 +15,9 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'p9Bv<3Eid9%$i01'
 
+business = Business()
+user = User()
+review = Review()
 
 def token_required(f):
     @wraps(f)
@@ -48,8 +51,6 @@ def create_user():
 
     if User.view_user(content['username']):
         return jsonify({'msg': 'Username not available'}), 400
-
-    user = User()
 
     message = user.add_user(content['name'], content['username'],
     content['email'], generate_password_hash(content['password']))
@@ -114,7 +115,6 @@ def register_business(current_user):
 
     content = request.get_json(force=True)
 
-    business = Business()
 
     message = business.add_business(content['name'],
     content['category'], content['description'],
@@ -132,7 +132,6 @@ def update_business(current_user, businessId):
 
     content = request.get_json(force=True)
 
-    business = Business()
 
     to_update = business.view_business(businessId)
 
@@ -160,7 +159,6 @@ def delete_business(current_user, businessId):
 
     content = request.get_json(force=True)
 
-    business = Business()
 
     to_delete = business.view_business(businessId)
 
@@ -191,8 +189,6 @@ def get_all_businesses():
 # retrieves a single business
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['GET'])
 def get_business(businessId):
-    business = Business()
-
     message = business.view_business(businessId)
 
     if not message:
@@ -211,14 +207,11 @@ def add_review_for(current_user, businessId):
 
     content = request.get_json(force=True)
 
-    business = Business()
-
     business = business.view_business(businessId)
 
     if not business:
         return jsonify({'msg': 'Business id is incorrect'}), 400
 
-    review = Review()
 
     message = review.add_review(content['rating'],
     content['body'], current_user['username'], businessId)
@@ -230,14 +223,10 @@ def add_review_for(current_user, businessId):
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
 methods=['GET'])
 def get_reviews_for(businessId):
-    business = Business()
-
     business = business.view_business(businessId)
 
     if not business:
         return jsonify({'msg': 'Business id is incorrect'}), 400
-
-    review = Review()
 
     reviews = review.view_reviews_for(businessId)
 
