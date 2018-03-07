@@ -40,10 +40,13 @@ class EndpointsTestCase(unittest.TestCase):
 
                     headers={'content-type': 'application/json'})
 
-        self.response = json.loads(self.response.data)
+        self.j_response = json.loads(self.response.data)
 
-        data = jwt.decode(self.response['token'], app.config['SECRET_KEY'])
+        data = jwt.decode(self.j_response['token'], app.config['SECRET_KEY'])
 
         user = User.view_user(data['username'])
 
+        self.assertTrue(self.response.status_code == 201)
+
         self.assertEqual(user['email'], self.test_user['email'])
+
