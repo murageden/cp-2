@@ -28,7 +28,7 @@ class BusinessTestCase(unittest.TestCase):
         self.business.update_business(
             self.response['business']['id'],
             'Modify Business', 'Shop',
-            'Behind Equity Bank', 'Eldoret', 4)
+            'Behind Equity Bank', 'Eldoret')
 
         self.new_business = self.business.view_business(
             self.response['business']['id'])
