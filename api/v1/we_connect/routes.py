@@ -16,8 +16,6 @@ app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'p9Bv<3Eid9%$i01'
 
 
-
-
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -27,18 +25,17 @@ def token_required(f):
             token = request.headers['x-access-token']
 
         if not token:
-            return jsonify({'message' : 'Token is missing!'}), 401
+            return jsonify({'message': 'Token is missing!'}), 401
 
-        try: 
+        try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
             current_user = User.view_user(data['username'])
         except:
-            return jsonify({'message' : 'Token is invalid!'}), 401
+            return jsonify({'message': 'Token is invalid!'}), 401
 
         return f(current_user, *args, **kwargs)
 
     return decorated
-
 
 
 # creates a user account
@@ -56,7 +53,7 @@ def create_user():
 
     message = user.add_user(content['name'], content['username'],
     content['email'], generate_password_hash(content['password']))
-    
+
     return jsonify(message), 201
 
 
@@ -72,17 +69,17 @@ def login_user():
         user = User.view_user(content['email'])
 
     if not user:
-        return jsonify ({
+        return jsonify({
             'msg': 'Wrong email or username/password combination'}), 401
 
     if check_password_hash(user['password'], content['password']):
         token = jwt.encode({
-            'username' : user['username'],
-            'exp' : datetime.now() + timedelta(minutes=4)},
+            'username': user['username'],
+            'exp': datetime.now() + timedelta(minutes=4)},
             app.config['SECRET_KEY'])
 
         return jsonify({
-            'token' : token.decode('UTF-8'),
+            'token': token.decode('UTF-8'),
             'msg': 'Log in successful'}), 201
 
 
@@ -100,7 +97,7 @@ def reset_password(current_user):
         return jsonify({'msg': 'Token is malformed'}), 400
 
     content = request.get_json(force=True)
-    
+
     user_to_reset = User.view_user(current_user['username'])
 
     user_to_reset['password'] = content['password']
@@ -141,7 +138,8 @@ def update_business(current_user, businessId):
 
     if to_update:
         if not to_update['owner'] == current_user:
-            return jsonify({'msg': 'You are not allowed to edit this business'}), 403
+            return jsonify(
+                {'msg': 'You are not allowed to edit this business'}), 403
 
     message = business.update_business(
         businessId, content['name'], content['category'],
@@ -168,8 +166,9 @@ def delete_business(current_user, businessId):
 
     if to_delete:
         if not to_delete['owner'] == current_user:
-            return jsonify({'msg': 'You are not allowed to delete this business'}), 403
-    
+            return jsonify(
+                {'msg': 'You are not allowed to delete this business'}), 403
+
     message = business.delete_business(businessId)
 
     if not message:
@@ -206,14 +205,14 @@ def get_business(businessId):
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
 methods=['POST'])
 @token_required
-def add_review_for(current_user, businessId): 
+def add_review_for(current_user, businessId):
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
 
     content = request.get_json(force=True)
 
     business = Business()
- 
+
     business = business.view_business(businessId)
 
     if not business:
