@@ -23,10 +23,8 @@ class Business:
             'created on': self.created_on}
 
         self.businesses.append(self.business_dict)
-        return {
-            'business': self.business_dict,
-            'msg': 'Business created ok'
-        }
+        
+        return self.business_dict
 
     # reads a business
     def view_business(self, id):
