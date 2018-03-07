@@ -28,6 +28,13 @@ class EndpointsTestCase(unittest.TestCase):
                 "password": "5678usr"
         }
 
+        self.test_business = {
+                "name": "Test Biz",
+                "category": "shop",
+                "description": "The best prices in town",
+                "location": "TRM"
+        }
+
     def test_create_user_endpoint(self):
         self.response = self.client.post('/weconnect/api/v1/auth/register',
 
@@ -64,4 +71,29 @@ class EndpointsTestCase(unittest.TestCase):
 
         self.j_response = json.loads(self.response.data)
 
+        self.assertTrue(self.response.status_code == 400)
+
         self.assertIn('Wrong', self.j_response['msg'])
+
+    def test_register_business(self):
+        self.response = self.client.post('/weconnect/api/v1/auth/login',
+
+                    data=json.dumps(self.test_login),
+
+                    headers={'content-type': 'application/json'})
+
+        self.j_response = json.loads(self.response.data)
+
+        self.response = self.client.post('/weconnect/api/v1/businesses',
+
+                    data=json.dumps(self.test_business),
+
+                    headers={'content-type': 'application/json', 
+                    'x-access-token': self.j_response['token']})
+
+        self.j_response = json.loads(self.response.data)
+
+        self.assertTrue(self.response.status_code == 201)
+
+        self.assertIn(self.j_response, Business.businesses)
+
