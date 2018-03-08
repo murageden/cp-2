@@ -190,3 +190,22 @@ class EndpointsTestCase(unittest.TestCase):
         self.j_response = json.loads(self.response.data)
         self.assertTrue(self.response.status_code == 401)
         self.assertIn('Token is missing', self.j_response['msg'])
+
+    def test_creates_a_review_for_a_business_with_token_and_correct_data(self):
+        self.response = self.client.post('/weconnect/api/v1/auth/login',
+                    data=json.dumps(self.test_login),
+                    headers={'content-type': 'application/json'})
+        self.token = json.loads(self.response.data)['token']
+        self.resp_reg = self.client.post('/weconnect/api/v1/businesses',
+                    data=json.dumps(self.test_business),
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.token})
+        self.js_resp = json.loads(self.resp_reg.data)
+        self.response = self.client.post(
+            f'/weconnect/api/v1/businesses/{self.js_resp["id"]}/reviews',
+                    data=json.dumps(self.test_review),
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.token})
+        self.assertEqual(self.response.status_code, 201)
+        self.j_response = json.loads(self.response.data)
+        self.assertIn(self.j_response, Review.reviews)
