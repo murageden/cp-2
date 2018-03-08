@@ -1,18 +1,20 @@
 import unittest
 from we_connect.business import Business
+from we_connect.user import User
 
 
 class BusinessTestCase(unittest.TestCase):
     def setUp(self):
         self.business = Business()
+        self.user = User()
         self.test_user = self.user.add_user(
             'Test User', 'test@user.com', 'test_user', '1234pass')
 
     def test_add_business(self):
         self.response = self.business.add_business(
             'Test Business1', 'Supermarket',
-            'Behind Equity Bank', 'Githurai,
-            'Nairobi Area', self.test_user['username'])
+            'Behind Equity Bank',
+            'Githurai, Nairobi Area', self.test_user['username'])
         self.assertIn(self.response, Business.businesses)
 
     def test_returns_a_business_if_business_exists(self):
@@ -27,8 +29,8 @@ class BusinessTestCase(unittest.TestCase):
     def test_updates_a_business__if_exists(self):
         self.response = self.business.add_business(
             'Test Business3', 'Supermarket',
-            'Behind Equity Bank', 'Githurai,
-            Nairobi Area', self.test_user['username'])
+            'Behind Equity Bank',
+            'Githurai, Nairobi Area', self.test_user['username'])
         self.business.update_business(
             self.response['id'],
             'Modify Business', 'Shop',
