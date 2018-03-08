@@ -13,15 +13,19 @@ class Review:
         """
         self.id = 1
         self.created_on = str(datetime.now())
-
+        self.user = User.view_user(username)
+        self.user_info = {
+            'name': self.user['name'],
+            'username': self.user['username'],
+            'since': self.user['created on']
+        }
         if not len(Review.reviews) == 0:
             self.id = Review.reviews[-1]['id'] + 1
-
         self.review_dict = {
             'id': self.id,
             'rating': rating,
             'body': body,
-            'review by': User.view_user(username),
+            'review by': self.user_info,
             'businessId': businessId,
             'created on': self.created_on}
         self.reviews.append(self.review_dict)
