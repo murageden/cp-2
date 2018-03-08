@@ -18,7 +18,7 @@ class EndpointsTestCase(unittest.TestCase):
                 "username": "test1",
                 "password": "1234usr"
         }
-        #lacks email of the user
+        # lacks email of the user
         self.incomplete_user = {
                 "name": "Test Name",
                 "email": "test4@test1.com",
@@ -41,7 +41,7 @@ class EndpointsTestCase(unittest.TestCase):
                 "description": "The best prices in town",
                 "location": "TRM"
         }
-        #lacks name of the business
+        # lacks name of the business
         self.incomplete_bs = {
                 "category": "shop",
                 "description": "The best prices in town",
@@ -57,6 +57,11 @@ class EndpointsTestCase(unittest.TestCase):
 
         self.test_review = {
                 "rating": 4,
+                "body": "Good place for holidays"
+        }
+
+        self.wrong_review = {
+                "rating": "4",
                 "body": "Good place for holidays"
         }
 
@@ -209,3 +214,23 @@ class EndpointsTestCase(unittest.TestCase):
         self.assertEqual(self.response.status_code, 201)
         self.j_response = json.loads(self.response.data)
         self.assertIn(self.j_response, Review.reviews)
+
+    def test_creates_a_review_for_a_business_with_token_and_incorrect_data(self):
+        self.response = self.client.post('/weconnect/api/v1/auth/login',
+                    data=json.dumps(self.test_login),
+                    headers={'content-type': 'application/json'})
+        self.token = json.loads(self.response.data)['token']
+        self.resp_reg = self.client.post('/weconnect/api/v1/businesses',
+                    data=json.dumps(self.test_business),
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.token})
+        self.js_resp = json.loads(self.resp_reg.data)
+        self.response = self.client.post(
+            f'/weconnect/api/v1/businesses/{self.js_resp["id"]}/reviews',
+                    data=json.dumps(self.wrong_review),
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.token})
+        self.assertEqual(self.response.status_code, 400)
+        self.j_response = json.loads(self.response.data)
+        self.assertNotIn(self.j_response, Review.reviews)
+        self.assertIn("Ratings must be values", str(self.j_response))
