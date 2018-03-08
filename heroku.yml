@@ -1,5 +1,7 @@
 build:
   languages:
     - python
+  packages:
+    - api/v1/we_connect
 run:
   web: flask run
