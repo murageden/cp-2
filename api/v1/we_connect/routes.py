@@ -100,7 +100,7 @@ def reset_password(current_user):
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
     user_to_reset = User.view_user(current_user['username'])
-    user_to_reset['password'] = content['password']
+    user_to_reset['password'] = generate_password_hash(content['password'])
     return jsonify(User.view_user(current_user['username']))
 
 
