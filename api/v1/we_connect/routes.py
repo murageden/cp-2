@@ -48,7 +48,7 @@ def create_user():
     content = request.get_json(force=True)
     message = validator.validate(content, 'user_reg')
     if message:
-        return jsonify(message)
+        return jsonify(message), 400
     if User.view_user(content['email']):
         return jsonify({'msg': 'Email already registered'}), 400
     if User.view_user(content['username']):
@@ -123,7 +123,7 @@ def register_business(current_user):
     content = request.get_json(force=True)
     message = validator.validate(content, 'business_reg')
     if message:
-        return jsonify(message)
+        return jsonify(message), 400
     message = business.add_business(content['name'],
     content['category'], content['description'],
     content['location'], current_user['username'])
@@ -141,10 +141,10 @@ def update_business(current_user, businessId):
     content = request.get_json(force=True)
     message = validator.validate(content, 'business_reg')
     if message:
-        return jsonify(message)
+        return jsonify(message), 400
     to_update = business.view_business(businessId)
     if to_update:
-        if not to_update['owner'] == current_user:
+        if not to_update['owner']['username'] == current_user['username']:
             return jsonify(
                 {'msg': 'You are not allowed to edit this business'}), 403
     message = business.update_business(
@@ -167,7 +167,7 @@ def delete_business(current_user, businessId):
     content = request.get_json(force=True)
     to_delete = business.view_business(businessId)
     if to_delete:
-        if not to_delete['owner'] == current_user:
+        if not to_delete['owner']['username'] == current_user['username']:
             return jsonify(
                 {'msg': 'You are not allowed to delete this business'}), 403
     message = business.delete_business(businessId)
@@ -211,7 +211,7 @@ def add_review_for(current_user, businessId):
     content = request.get_json(force=True)
     message = validator.validate(content, 'review_reg')
     if message:
-        return jsonify(message)
+        return jsonify(message), 400
     to_review = business.view_business(businessId)
     if not to_review:
         return jsonify({'msg': 'Business id is incorrect'}), 400
