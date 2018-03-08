@@ -53,8 +53,16 @@ def create_user():
         return jsonify({'msg': 'Email already registered'}), 400
     if User.view_user(content['username']):
         return jsonify({'msg': 'Username not available'}), 400
-    message = user.add_user(content['name'], content['username'],
+    new_user = user.add_user(content['name'], content['username'],
     content['email'], generate_password_hash(content['password']))
+    message = {
+        'user': {
+                    'name': new_user['name'],
+                    'username': new_user['username'],
+                    'email': new_user['email']
+        },
+        'msg': f"User created successfully on {new_user['created on']}"
+    }
     return jsonify(message), 201
 
 
