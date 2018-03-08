@@ -17,7 +17,13 @@ class EndpointsTestCase(unittest.TestCase):
                 "email": "test@test1.com",
                 "username": "test1",
                 "password": "1234usr"
-            }
+        }
+        #lacks email of the user
+        self.incomplete_user = {
+                "name": "Test Name",
+                "email": "test4@test1.com",
+                "password": "1234usr"
+        }
 
         self.test_login = {
                 "username": "test1",
@@ -35,6 +41,12 @@ class EndpointsTestCase(unittest.TestCase):
                 "description": "The best prices in town",
                 "location": "TRM"
         }
+        #lacks name of the business
+        self.incomplete_bs = {
+                "category": "shop",
+                "description": "The best prices in town",
+                "location": "TRM"
+        }
 
         self.new_business = {
                 "name": "Updated Biz",
@@ -47,6 +59,14 @@ class EndpointsTestCase(unittest.TestCase):
                 "rating": 4,
                 "body": "Good place for holidays"
         }
+
+    def test_create_user_without_some_required_data(self):
+        self.response = self.client.post('/weconnect/api/v1/auth/register',
+                    data=json.dumps(self.incomplete_user),
+                    headers={'content-type': 'application/json'})
+        self.assertEqual(self.response.status_code, 400)
+        self.assertNotIn("Test Name", str(self.response.data))
+        self.assertIn("Missing details", str(self.response.data))
 
     def test_create_user_with_correct_data(self):
         self.response = self.client.post('/weconnect/api/v1/auth/register',
