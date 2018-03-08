@@ -234,3 +234,15 @@ class EndpointsTestCase(unittest.TestCase):
         self.j_response = json.loads(self.response.data)
         self.assertNotIn(self.j_response, Review.reviews)
         self.assertIn("Ratings must be values", str(self.j_response))
+
+    def test_create_review_for_non_existing_business_returns_error(self):
+        self.response = self.client.post('/weconnect/api/v1/auth/login',
+                    data=json.dumps(self.test_login),
+                    headers={'content-type': 'application/json'})
+        self.token = json.loads(self.response.data)['token']
+        self.response = self.client.post(
+            '/weconnect/api/v1/businesses/1000/reviews',
+                    data=json.dumps(self.test_review),
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.token})
+        self.assertEqual(self.response.status_code, 400)
