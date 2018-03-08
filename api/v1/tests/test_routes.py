@@ -115,7 +115,7 @@ class EndpointsTestCase(unittest.TestCase):
         self.assertIn('Token is missing', self.j_response['msg'])
         self.assertNotIn(self.j_response, Business.businesses)
 
-    def test_update_business_with_correct_data(self):
+    def test_update_business_with_correct_data_and_token(self):
         self.response = self.client.post('/weconnect/api/v1/auth/login',
                     data=json.dumps(self.test_login),
                     headers={'content-type': 'application/json'})
@@ -133,6 +133,24 @@ class EndpointsTestCase(unittest.TestCase):
         self.j_response = json.loads(self.response.data)
         self.assertIn('Updated Biz', str(self.j_response))
         self.assertIn(self.j_response, Business.businesses)
+
+    def test_update_business_with_incorrect_data_and_token(self):
+        self.response = self.client.post('/weconnect/api/v1/auth/login',
+                    data=json.dumps(self.test_login),
+                    headers={'content-type': 'application/json'})
+        self.token = json.loads(self.response.data)['token']
+        self.response = self.client.post('/weconnect/api/v1/businesses',
+                    data=json.dumps(self.test_business),
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.token})
+        self.j_response = json.loads(self.response.data)
+        self.response = self.client.put(
+            f'/weconnect/api/v1/businesses/{self.j_response["id"]}',
+                    data=json.dumps(self.incomplete_bs),
+                    headers={'content-type': 'application/json',
+                    'x-access-token': self.token})
+        self.assertEqual(self.response.status_code, 400)
+        self.assertIn('Missing details', str(self.response.data))
 
     def test_update_business_without_token(self):
         self.response = self.client.put('/weconnect/api/v1/businesses/1',
