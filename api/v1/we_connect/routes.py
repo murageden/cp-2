@@ -109,7 +109,13 @@ def reset_password(current_user):
     content = request.get_json(force=True)
     user_to_reset = User.view_user(current_user['username'])
     user_to_reset['password'] = generate_password_hash(content['password'])
-    return jsonify(User.view_user(current_user['username']))
+    reseted_user = User.view_user(current_user['username'])
+    message = {
+        'name': reseted_user['name'],
+        'username': reseted_user['username'],
+        'msg': 'Password changed successfully'
+    }
+    return jsonify(message)
 
 
 @app.route('/weconnect/api/v1/businesses', methods=['POST'])
