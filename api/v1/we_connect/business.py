@@ -12,7 +12,12 @@ class Business:
             returns the added business
         """
         self.id = 1
-        self.user = User()
+        self.user = User.view_user(owner)
+        self.user_info = {
+            'name': self.user['name'],
+            'username': self.user['username'],
+            'since': self.user['created on']
+        }
         self.created_on = str(datetime.now())
         if not len(self.businesses) == 0:
             self.id = self.businesses[-1]['id'] + 1
@@ -22,7 +27,7 @@ class Business:
             'category': category,
             'description': description,
             'location': location,
-            'owner': User.view_user(owner),
+            'owner': self.user_info,
             'created on': self.created_on}
         self.businesses.append(self.business_dict)
         return self.business_dict
