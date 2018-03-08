@@ -9,6 +9,7 @@ import jwt
 from we_connect.user import User
 from we_connect.business import Business
 from we_connect.review import Review
+from we_connect.validator import Validator
 
 app = Flask(__name__)
 
@@ -18,6 +19,7 @@ app.config['SECRET_KEY'] = 'p9Bv<3Eid9%$i01'
 business = Business()
 user = User()
 review = Review()
+validator = Validator()
 
 
 def token_required(f):
@@ -44,6 +46,9 @@ def create_user():
         registers a user into the API
     """
     content = request.get_json(force=True)
+    message = validator.validate(content, 'user_reg')
+    if message:
+        return jsonify(message)
     if User.view_user(content['email']):
         return jsonify({'msg': 'Email already registered'}), 400
     if User.view_user(content['username']):
@@ -74,7 +79,9 @@ def login_user():
             app.config['SECRET_KEY'])
         return jsonify({
             'token': token.decode('UTF-8'),
-            'msg': 'Log in successful'}), 201
+            'msg': 'Log in successful'}), 200
+    return jsonify({
+            'msg': 'Wrong email or username/password combination'}), 400
 
 
 @app.route('/weconnect/api/v1/auth/logout', methods=['POST'])
@@ -106,6 +113,9 @@ def register_business(current_user):
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
+    message = validator.validate(content, 'business_reg')
+    if message:
+        return jsonify(message)
     message = business.add_business(content['name'],
     content['category'], content['description'],
     content['location'], current_user['username'])
@@ -121,6 +131,9 @@ def update_business(current_user, businessId):
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
+    message = validator.validate(content, 'business_reg')
+    if message:
+        return jsonify(message)
     to_update = business.view_business(businessId)
     if to_update:
         if not to_update['owner'] == current_user:
@@ -152,7 +165,7 @@ def delete_business(current_user, businessId):
     message = business.delete_business(businessId)
     if not message:
         return jsonify({'msg': 'Business id is incorrect'}), 400
-    return jsonify(message), 201
+    return jsonify(message), 200
 
 
 @app.route('/weconnect/api/v1/businesses', methods=['GET'])
@@ -188,6 +201,9 @@ def add_review_for(current_user, businessId):
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
+    message = validator.validate(content, 'review_reg')
+    if message:
+        return jsonify(message)
     to_review = business.view_business(businessId)
     if not to_review:
         return jsonify({'msg': 'Business id is incorrect'}), 400
