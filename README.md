@@ -41,7 +41,7 @@ source venv/bin/activate
 
 
 ### Install Requirements
-Run `pip install requirements.txt`
+Run `pip install -r requirements.txt`
 
 
 ### Run the API on Localhost
