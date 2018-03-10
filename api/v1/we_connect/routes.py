@@ -108,6 +108,13 @@ def reset_password(current_user):
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
     user_to_reset = User.view_user(current_user['username'])
+    if 'old password' not in content:
+        return jsonify({'msg': 'Missing old password'}), 400
+    if 'new password' not in content:
+        return jsonify({'msg': 'Missing new password'}), 400
+    if not check_password_hash(user_to_reset['password'], content['old password']):
+        return jsonify({
+            'msg': 'Wrong email or username/password combination'}), 400
     user_to_reset['password'] = generate_password_hash(content['password'])
     reseted_user = User.view_user(current_user['username'])
     message = {
