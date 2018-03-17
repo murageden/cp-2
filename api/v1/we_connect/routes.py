@@ -114,8 +114,8 @@ def reset_password(current_user):
         return jsonify({'msg': 'Missing new password'}), 400
     if not check_password_hash(to_reset['password'], content['old password']):
         return jsonify({
-            'msg': 'Wrong email or username/password combination'}), 400
-    to_reset['password'] = generate_password_hash(content['password'])
+            'msg': 'Wrong old password'}), 400
+    to_reset['password'] = generate_password_hash(content['new password'])
     reseted_user = User.view_user(current_user['username'])
     message = {
         'name': reseted_user['name'],
