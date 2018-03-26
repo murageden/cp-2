@@ -1,0 +1,105 @@
+FORMAT: 1A
+
+# WeConnect
+
+WeConnect provides a platform that brings businesses and individuals together. 
+This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with
+
+## Users
+
+### Create a New User Acount [POST]
+This action creates a user. It returns details for the created user
+
+## User 
+A single JSON object, which represents a single user.
+
+Required attributes: 
+
+- `name: String` The full name of the user
+- `username: String` The prefered unique short name for the user
+- `email: String` The user's email address, (registered once)
+- `password: String` The user's prefered pasword
+
+            
+### Log in a User [POST]
+This action logs in a user. It returns an authentication token
+
+## Login
+A single JSON object, which represents a single user's login credentials
+
+Required attributes: 
+
+- `username: String` The registered unique short name for the user or:
+- `email: String` The user's email address
+- `password: String` The user's registered pasword, most recent passsword if previously changed
+
+
+### Log out a User [POST]
+This action logs out a previously logged in user
+
+## Authentication Token
+A single string object, which represents a single user's unique authentication string. 
+The string is returned after user logs in.
+
+Required attributes: 
+
+- `x-access-token: String` An authorization string passed with the headers
+
+
+
+## Businesses
+
+### Register a New Business [POST]
+
+This action creates a business. 
+It requires user to provide an authentication token. 
+The authentication token is provided after user logs in
+
+## Business
+A single JSON object, which represents a single business.
+
+Required attributes: 
+
+- `name: String` The full name or title of the business
+- `description: String` The prefered short info about business
+- `location: String` The physical address of the business
+- `category: String` The nature of the business e.g Shop, Supermarket, Mall, Salon e.tc
+
+### Update a Business [PUT]
+
+This action edits details of an existing business. It requires user to provide authentication token and user to be the owner of the business they are updating
+
+## Business
+A single JSON object, which represents a single business.
+
+Required attributes: 
+
+- `name: String` The full name or title of the business
+- `description: String` The prefered short info about business
+- `location: String` The physical address of the business
+- `category: String` The nature of the business e.g Shop, Supermarket, Mall, Salon e.tc
+
+
+### Delete a Business [DELETE]
+
+This action deletes an existing business. It returns the deleted business.
+It requires a valid `Authentication Token` and that the user identified by the token is the owner of the business
+
+
+## Reviews 
+
+### Add Review to a Business [POST]
+
+This action creates and adds a review to a business. 
+It requires user to provide an authentication token. 
+The `Authentication Token` is a string returned after user logs in
+
+## Review
+A single JSON object, which represents a single review
+
+
+Required attributes: 
+
+- `rating: int` The rate out of five that the user gives the business they want to review
+- `body: String` A little description as to why the user is giving this review
+- `businessId: int` The identifier of the business that the user is reviewing
