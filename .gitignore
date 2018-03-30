@@ -8,3 +8,4 @@ api/v2/we_connect/__pycache__/*
 *.pytest_cache
 *.pickle
 m-env
+*.pyc
