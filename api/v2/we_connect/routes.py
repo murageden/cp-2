@@ -1,5 +1,5 @@
 """we_connect/routes.py."""
-from flask import Flask, jsonify, request
+from flask import jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from datetime import timedelta
@@ -9,9 +9,11 @@ import jwt
 # local imports
 from we_connect.models import User
 from we_connect.models import Business
-from we_connect.models import Review
+# from we_connect.models import Review
 from we_connect.validator import Validator
 from run import app
+
+validator = Validator()
 
 
 def token_required(f):
@@ -33,27 +35,31 @@ def token_required(f):
 
 
 # creates a user account
-@app.route('/weconnect/api/v1/auth/register', methods=['POST'])
+@app.route('/weconnect/api/v2/auth/register', methods=['POST'])
 def create_user():
     """Register a user into the API."""
     content = request.get_json(force=True)
     message = validator.validate(content, 'user_reg')
     if message:
         return jsonify(message), 400
-    if User.view_user(content['email']):
+    if User.get_user(content['email']):
         return jsonify({'msg': 'Email already registered'}), 400
-    if User.view_user(content['username']):
+    if User.get_user(content['username']):
         return jsonify({'msg': 'Username not available'}), 400
-    new_user = user.add_user(content['name'], content['username'],
-                             content['email'], generate_password_hash(
-                             content['password']))
+    User(name=content['name'],
+         username=content['username'],
+         email=content['email'],
+         password=generate_password_hash(
+         content['password'])).save
+    created_user = User.get_user(content['username'])
     message = {
         'user': {
-            'name': new_user['name'],
-            'username': new_user['username'],
-            'email': new_user['email']
+            'name': created_user.name,
+            'username': created_user.username,
+            'email': created_user.email
         },
-        'msg': f"User created successfully on {new_user['created on']}"
+        'msg': "User created successfully on {}".format(
+            created_user.date_created)
     }
     return jsonify(message), 201
 
