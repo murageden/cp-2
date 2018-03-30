@@ -56,8 +56,8 @@ class Validator:
             if self.has_special.search(obj['name']):
                 return {'msg': 'Name should not contain special chars'}
             if obj['category'] not in self.categs:
-                return {'msg': f'Only businesses\
-                in {str(self.categs)} are allowed'}
+                return {'msg': 'Only businesses\
+                in {} are allowed'}.format(str(self.categs))
 
         if con == 'review_reg':
             for prop in self.review_props:
