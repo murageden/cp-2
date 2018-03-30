@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from datetime import timedelta
@@ -6,20 +6,12 @@ from functools import wraps
 import jwt
 
 # local imports
-from we_connect.user import User
-from we_connect.business import Business
-from we_connect.review import Review
+from we_connect.models import User
+from we_connect.models import Business
+from we_connect.models import Review
 from we_connect.validator import Validator
+from run import app
 
-app = Flask(__name__)
-
-app.config['DEBUG'] = True
-app.config['SECRET_KEY'] = 'p9Bv<3Eid9%$i01'
-
-business = Business()
-user = User()
-review = Review()
-validator = Validator()
 
 
 def token_required(f):
