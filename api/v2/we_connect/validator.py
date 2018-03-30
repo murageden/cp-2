@@ -1,8 +1,12 @@
+"""we_connect/validator.py."""
 import re
 
 
 class Validator:
+    """Object to contain all the validation rules and methods."""
+
     def __init__(self):
+        """Validation rules."""
         self.user_props = ['email', 'username', 'name', 'password']
         self.review_props = ['rating', 'body']
         self.business_props = ['name', 'description', 'location', 'category']
@@ -11,10 +15,11 @@ class Validator:
         self.categs = ['shop', 'supermarket', 'mall', 'school', 'church']
 
     def validate(self, obj, con):
+        """Method that validates the rules."""
         if con == 'user_reg':
             for prop in self.user_props:
-               if prop not in obj:
-                   return {"msg": "Missing details"}
+                if prop not in obj:
+                    return {"msg": "Missing details"}
             for prop in self.user_props:
                 if obj[prop].strip() == "":
                     return {'msg': 'Empty details not allowed'}
@@ -25,7 +30,8 @@ class Validator:
             if len(str(obj['email'])) < 4:
                 return {'msg': 'Email is invalid'}
             if not 4 < len(str(obj['username'])) < 10:
-                return {'msg': 'User name should be between 4 and 10 characters'}
+                return {'msg': 'Username should be between\
+                4 and 10 characters'}
             if self.has_numbers.search(obj['name']):
                 return {'msg': 'Name should not contain numbers'}
             if self.has_special.search(obj['name']):
@@ -33,8 +39,8 @@ class Validator:
 
         if con == 'business_reg':
             for prop in self.business_props:
-               if prop not in obj:
-                   return {"msg": "Missing details"}
+                if prop not in obj:
+                    return {"msg": "Missing details"}
             for prop in self.business_props:
                 if obj[prop].strip() == "":
                     return {'msg': 'Empty details not allowed'}
@@ -43,18 +49,20 @@ class Validator:
             if not 8 < len(str(obj['description'])):
                 return {'msg': 'Description should be more than 8 characters'}
             if self.has_numbers.search(obj['name']):
-                return {'msg': 'Name should not contain numbers or special chars'}
+                return {'msg': 'Name should not contain\
+                numbers or special characters'}
             if self.has_special.search(obj['description']):
                 return {'msg': 'Description should not contain special chars'}
             if self.has_special.search(obj['name']):
                 return {'msg': 'Name should not contain special chars'}
             if obj['category'] not in self.categs:
-                return {'msg': f'Only businesses in {str(self.categs)} are allowed'}
+                return {'msg': f'Only businesses\
+                in {str(self.categs)} are allowed'}
 
         if con == 'review_reg':
             for prop in self.review_props:
-               if prop not in obj:
-                   return {"msg": "Missing details"}
+                if prop not in obj:
+                    return {"msg": "Missing details"}
             for prop in self.review_props:
                 if obj['body'].strip() == "":
                     return {'msg': 'Empty values not allowed'}

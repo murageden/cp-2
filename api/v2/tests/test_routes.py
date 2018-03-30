@@ -1,10 +1,9 @@
 import unittest
-import os
-import json
 from we_connect import create_app, db
 
+
 class RoutesTestCase(unittest.TestCase):
-    """This class represents the routes test case"""
+    """This class represents the routes test case."""
 
     def setUp(self):
         """Define test variables and initialize app."""
@@ -15,9 +14,9 @@ class RoutesTestCase(unittest.TestCase):
         with self.app.app_context():
             # create all tables
             db.create_all()
-    
+
     def tearDown(self):
-        """teardown all initialized variables."""
+        """Teardown all initialized variables."""
         with self.app.app_context():
             # drop all tables
             db.session.remove()

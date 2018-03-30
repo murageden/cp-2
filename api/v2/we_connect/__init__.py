@@ -1,5 +1,7 @@
+"""we_connect/__init__.py."""
 from flask_api import FlaskAPI
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import S
+QLAlchemy
 
 # local import
 from instance.config import app_config
@@ -7,7 +9,9 @@ from instance.config import app_config
 # initialize sql-alchemy
 db = SQLAlchemy()
 
+
 def create_app(config_name):
+	"""configures and creates the app."""
     app = FlaskAPI(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')

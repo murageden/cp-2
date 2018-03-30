@@ -16,7 +16,7 @@ class User(db.Model):
         onupdate=db.func.current_timestamp())
 
     def __init__(self, name, username, email, password):
-        """initialize with name."""
+        """Initialize with name."""
         self.name = name
 
     def save(self):

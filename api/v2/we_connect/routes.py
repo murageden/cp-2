@@ -1,3 +1,4 @@
+"""we_connect/routes.py."""
 from flask import Flask, jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -13,8 +14,8 @@ from we_connect.validator import Validator
 from run import app
 
 
-
 def token_required(f):
+    """Decorate a function to use a jwt token."""
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
@@ -34,9 +35,7 @@ def token_required(f):
 # creates a user account
 @app.route('/weconnect/api/v1/auth/register', methods=['POST'])
 def create_user():
-    """
-        registers a user into the API
-    """
+    """Register a user into the API."""
     content = request.get_json(force=True)
     message = validator.validate(content, 'user_reg')
     if message:
@@ -46,24 +45,22 @@ def create_user():
     if User.view_user(content['username']):
         return jsonify({'msg': 'Username not available'}), 400
     new_user = user.add_user(content['name'], content['username'],
-    content['email'], generate_password_hash(content['password']))
+                             content['email'], generate_password_hash(
+                             content['password']))
     message = {
         'user': {
-                    'name': new_user['name'],
-                    'username': new_user['username'],
-                    'email': new_user['email']
+            'name': new_user['name'],
+            'username': new_user['username'],
+            'email': new_user['email']
         },
         'msg': f"User created successfully on {new_user['created on']}"
     }
     return jsonify(message), 201
 
 
-# logs in a user
 @app.route('/weconnect/api/v1/auth/login', methods=['POST'])
 def login_user():
-    """
-        logs in a user
-    """
+    """Log in a user."""
     content = request.get_json(force=True)
     if 'username' in content:
         user = User.view_user(content['username'])
@@ -81,11 +78,12 @@ def login_user():
             'token': token.decode('UTF-8'),
             'msg': 'Log in successful'}), 200
     return jsonify({
-            'msg': 'Wrong email or username/password combination'}), 400
+        'msg': 'Wrong email or username/password combination'}), 400
 
 
 @app.route('/weconnect/api/v1/auth/logout', methods=['POST'])
 def logout():
+    """Log out a user."""
     return jsonify({'msg': 'User log out successfull'}), 200
 
 
@@ -93,16 +91,14 @@ def logout():
 @app.route('/weconnect/api/v1/auth/reset-password', methods=['POST'])
 @token_required
 def reset_password(current_user):
-    """
-        changes a password for a user
-    """
+    """Change a password for a user."""
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
     to_reset = User.view_user(current_user['username'])
-    if not 'old password' in content:
+    if 'old password' not in content:
         return jsonify({'msg': 'Missing old password'}), 400
-    if not 'new password' in content:
+    if 'new password' not in content:
         return jsonify({'msg': 'Missing new password'}), 400
     if not check_password_hash(to_reset['password'], content['old password']):
         return jsonify({
@@ -120,9 +116,7 @@ def reset_password(current_user):
 @app.route('/weconnect/api/v1/businesses', methods=['POST'])
 @token_required
 def register_business(current_user):
-    """
-        registers a business for a user
-    """
+    """Register a business for a user."""
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
@@ -130,17 +124,17 @@ def register_business(current_user):
     if message:
         return jsonify(message), 400
     message = business.add_business(content['name'],
-    content['category'], content['description'],
-    content['location'], current_user['username'])
+                                    content['category'],
+                                    content['description'],
+                                    content['location'],
+                                    current_user['username'])
     return jsonify(message), 201
 
 
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['PUT'])
 @token_required
 def update_business(current_user, businessId):
-    """
-        updates an existing business
-    """
+    """Update an existing business."""
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
@@ -163,10 +157,7 @@ def update_business(current_user, businessId):
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['DELETE'])
 @token_required
 def delete_business(current_user, businessId):
-    """
-        removes an existing business
-        from the list of all businesses
-    """
+    """Remove an existing business."""
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
@@ -183,9 +174,7 @@ def delete_business(current_user, businessId):
 
 @app.route('/weconnect/api/v1/businesses', methods=['GET'])
 def get_all_businesses():
-    """
-        retrieves the list of all businesses
-    """
+    """Retrieve the list of all businesses."""
     businesses = Business.businesses
     if not len(businesses):
         return jsonify({'msg': 'No businesses yet'}), 200
@@ -194,10 +183,7 @@ def get_all_businesses():
 
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['GET'])
 def get_business(businessId):
-    """
-        retrieves a single business
-        from the list of all businesses
-    """
+    """Retrieve a single business."""
     message = business.view_business(businessId)
     if not message:
         return jsonify({'msg': 'Business id is incorrect'}), 400
@@ -205,12 +191,10 @@ def get_business(businessId):
 
 
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
-methods=['POST'])
+           methods=['POST'])
 @token_required
 def add_review_for(current_user, businessId):
-    """
-        adds a review to a business
-    """
+    """Add a review for a business."""
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
@@ -221,16 +205,15 @@ def add_review_for(current_user, businessId):
     if not to_review:
         return jsonify({'msg': 'Business id is incorrect'}), 400
     message = review.add_review(content['rating'],
-    content['body'], current_user['username'], businessId)
+                                content['body'],
+                                current_user['username'], businessId)
     return jsonify(message), 201
 
 
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
-methods=['GET'])
+           methods=['GET'])
 def get_reviews_for(businessId):
-    """
-        retrieves all reviews for a single business
-    """
+    """Retrieve all reviews for a single business."""
     get_bs = business.view_business(businessId)
     if not get_bs:
         return jsonify({'msg': 'Business id is incorrect'}), 400
