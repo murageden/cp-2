@@ -26,7 +26,7 @@ def token_required(f):
         if not token:
             return jsonify({'msg': 'Token is missing'}), 401
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(token, app.config['SECRET'])
             current_user = User.view_user(data['username'])
         except:
             return jsonify({'msg': 'Token is invalid'}), 401
@@ -67,22 +67,22 @@ def create_user():
     return jsonify(message), 201
 
 
-@app.route('/weconnect/api/v1/auth/login', methods=['POST'])
+@app.route('/weconnect/api/v2/auth/login', methods=['POST'])
 def login_user():
     """Log in a user."""
     content = request.get_json(force=True)
     if 'username' in content:
-        user = User.view_user(content['username'])
+        user = User.get_user(content['username'].strip())
     if 'email' in content:
-        user = User.view_user(content['email'])
+        user = User.get_user(content['email'].strip())
     if not user:
         return jsonify({
-            'msg': 'Wrong email or username/password combination'}), 400
-    if check_password_hash(user['password'], content['password']):
+            'msg': 'Email or username is incorrect'}), 400
+    if check_password_hash(user.password, content['password']):
         token = jwt.encode({
-            'username': user['username'],
+            'username': user.username,
             'exp': datetime.now() + timedelta(minutes=4)},
-            app.config['SECRET_KEY'])
+            app.config['SECRET'])
         return jsonify({
             'token': token.decode('UTF-8'),
             'msg': 'Log in successful'}), 200
