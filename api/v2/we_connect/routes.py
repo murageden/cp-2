@@ -27,7 +27,7 @@ def token_required(f):
             return jsonify({'msg': 'Token is missing'}), 401
         try:
             data = jwt.decode(token, app.config['SECRET'])
-            current_user = User.view_user(data['username'])
+            current_user = User.get_user(data['username'])
         except:
             return jsonify({'msg': 'Token is invalid'}), 401
         return f(current_user, *args, **kwargs)
@@ -97,29 +97,28 @@ def logout():
 
 
 # password reset
-@app.route('/weconnect/api/v1/auth/reset-password', methods=['POST'])
+@app.route('/weconnect/api/v2/auth/reset-password', methods=['POST'])
 @token_required
 def reset_password(current_user):
     """Change a password for a user."""
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
-    to_reset = User.view_user(current_user['username'])
+    to_reset = current_user
     if 'old password' not in content:
         return jsonify({'msg': 'Missing old password'}), 400
     if 'new password' not in content:
         return jsonify({'msg': 'Missing new password'}), 400
-    if not check_password_hash(to_reset['password'], content['old password']):
+    if not check_password_hash(to_reset.password,
+                               content['old password'].strip()):
         return jsonify({
-            'msg': 'Wrong old password'}), 400
-    to_reset['password'] = generate_password_hash(content['new password'])
-    reseted_user = User.view_user(current_user['username'])
+            'msg': 'Wrong password'}), 400
+    User.query.filter_by(username=current_user.username).update(
+        {'password': generate_password_hash(content['new password'].strip())})
     message = {
-        'name': reseted_user['name'],
-        'username': reseted_user['username'],
-        'msg': 'Password changed successfully'
+        'msg': 'Password for {} changed successfully'.format(to_reset.username)
     }
-    return jsonify(message)
+    return jsonify(message), 200
 
 
 @app.route('/weconnect/api/v1/businesses', methods=['POST'])
