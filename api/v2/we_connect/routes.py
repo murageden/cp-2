@@ -121,7 +121,7 @@ def reset_password(current_user):
     return jsonify(message), 200
 
 
-@app.route('/weconnect/api/v1/businesses', methods=['POST'])
+@app.route('/weconnect/api/v2/businesses', methods=['POST'])
 @token_required
 def register_business(current_user):
     """Register a business for a user."""
@@ -131,11 +131,22 @@ def register_business(current_user):
     message = validator.validate(content, 'business_reg')
     if message:
         return jsonify(message), 400
-    message = business.add_business(content['name'],
-                                    content['category'],
-                                    content['description'],
-                                    content['location'],
-                                    current_user['username'])
+    new_business = Business(name=content['name'].strip(),
+                            category=content['category'].strip(),
+                            description=content['description'].strip(),
+                            location=content['location'].strip(),
+                            owner=current_user
+                            )
+    db.session.add(new_business)
+    db.session.commit()
+    message = {'msg': "Business id {} created for owner {}".format(
+        new_business.id, new_business.business_owner),
+        'details': {'name': new_business.name,
+                    'category': new_business.category,
+                    'description': new_business.description,
+                    'location': new_business.location,
+                    'owner': new_business.business_owner
+                    }}
     return jsonify(message), 201
 
 
