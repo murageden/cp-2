@@ -32,6 +32,14 @@ class UserRoutesTestCase(unittest.TestCase):
             "username": "test1",  # similar username to a previous user
             "password": "1234user"
         }
+        self.test_login = {
+            "username": "test1",
+            "password": "1234user"
+        }
+        self.test_wrong_pass = {
+            "username": "test1",
+            "password": "1234users"
+        }
 
         # binds the app to the current context
         with self.app.app_context():
@@ -79,6 +87,49 @@ class UserRoutesTestCase(unittest.TestCase):
                                          })
         self.assertEqual(self.response.status_code, 400)
         self.assertIn("not available!", str(self.response.data))
+
+    def test_login_user_with_correct_login(self):
+        """Test user login with all log in details provided."""
+        self.client.post('/weconnect/api/v2/auth/register',
+                         data=json.dumps(self.test_user),
+                         headers={
+                             'content-type': 'application/json'
+                         })
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.test_login),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn("Log in successful", str(self.response.data))
+
+    def test_login_user_with_non_existent_email(self):
+        """Try to login with no user created."""
+        """The email is not existing in the data structure."""
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.test_login),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.assertEqual(self.response.status_code, 400)
+        self.assertIn("Email or username is incorrect",
+                      str(self.response.data))
+
+    def test_login_with_incorrect_email(self):
+        """Test user login with all log in details provided."""
+        """The password provided is incorrect."""
+        self.client.post('/weconnect/api/v2/auth/register',
+                         data=json.dumps(self.test_user),
+                         headers={
+                             'content-type': 'application/json'
+                         })
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.test_wrong_pass),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.assertEqual(self.response.status_code, 400)
+        self.assertIn("Wrong", str(self.response.data))
 
     def tearDown(self):
         """Tear down all initialized variables."""
