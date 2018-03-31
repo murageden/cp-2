@@ -11,7 +11,7 @@ from we_connect.models import User
 from we_connect.models import Business
 # from we_connect.models import Review
 from we_connect.validator import Validator
-from run import app
+from run import app, db
 
 validator = Validator()
 
@@ -39,26 +39,29 @@ def token_required(f):
 def create_user():
     """Register a user into the API."""
     content = request.get_json(force=True)
-    message = validator.validate(content, 'user_reg')
-    if message:
-        return jsonify(message), 400
-    if User.get_user(content['email']):
-        return jsonify({'msg': 'Email already registered'}), 400
-    if User.get_user(content['username']):
-        return jsonify({'msg': 'Username not available'}), 400
-    User(name=content['name'],
-         username=content['username'],
-         email=content['email'],
-         password=generate_password_hash(
-         content['password'])).save
-    created_user = User.get_user(content['username'])
+    err_msg = validator.validate(content, 'user_reg')
+    if err_msg:
+        return jsonify(err_msg), 400
+    if User.get_user(content['email'].strip()):
+        return jsonify({'msg': 'Email already registered!'}), 400
+    if User.get_user(content['username'].strip()):
+        return jsonify({'msg': 'Username not available!'}), 400
+    new_user = User(name=content['name'].strip(),
+                    username=content['username'].strip(),
+                    email=content['email'].strip(),
+                    password=generate_password_hash(
+                    content['password'].strip()))
+    db.session.add(new_user)
+    db.session.commit()
+    created_user = User.get_user(content['email'].strip())
     message = {
-        'user': {
+        'details': {
             'name': created_user.name,
             'username': created_user.username,
             'email': created_user.email
         },
-        'msg': "User created successfully on {}".format(
+        'msg': "User {} created successfully on {}".format(
+            created_user.username,
             created_user.date_created)
     }
     return jsonify(message), 201
