@@ -38,6 +38,13 @@ class BusinessRoutesTestCase(unittest.TestCase):
             "description": "The best prices in town",
             "location": "Near TRM"
         }
+        # for modifying a bs
+        self.test_update_bs = {
+            "name": "Updated Test Business",
+            "category": "supermarket",
+            "description": "Ultimate value for money",
+            "location": "Near TRM"
+        }
 
         # binds the app to the current context
         with self.app.app_context():
@@ -123,6 +130,35 @@ class BusinessRoutesTestCase(unittest.TestCase):
                                          })
         self.assertEqual(self.response.status_code, 401)
         self.assertIn("Token is invalid", str(self.response.data))
+
+    def test_update_bs_with_correct_data_and_token(self):
+        """Try to update a bs with token and all the details."""
+        self.client.post('/weconnect/api/v2/auth/register',
+                         data=json.dumps(self.user),
+                         headers={
+                             'content-type': 'application/json'
+                         })
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.login),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.token = json.loads(self.response.data)['token']  # grab the token
+        self.response = self.client.post('/weconnect/api/v2/businesses',
+                                         data=json.dumps(self.test_bs),
+                                         headers={
+                                             'content-type': 'application/json',
+                                             'x-access-token': self.token
+                                         })
+        self.response = self.client.put('/weconnect/api/v2/businesses/1',
+                                        data=json.dumps(self.test_update_bs),
+                                        headers={
+                                            'content-type': 'application/json',
+                                            'x-access-token': self.token
+                                        })
+        self.assertEqual(self.response.status_code, 201)
+        self.assertIn("I want to know how",
+                      str(self.response.data))
 
     def tearDown(self):
         """Tear down all initialized variables."""
