@@ -1,6 +1,5 @@
-"""Contain tests for the endpoints."""
+"""Contain tests for the user endpoints."""
 from flask import json
-import jwt
 import unittest
 # local imports
 from run import db
@@ -8,7 +7,7 @@ from we_connect.routes import app
 
 
 class UserRoutesTestCase(unittest.TestCase):
-    """This class represents the routes test case."""
+    """This class represents the user routes test case."""
 
     def setUp(self):
         """Define test variables."""
@@ -39,6 +38,10 @@ class UserRoutesTestCase(unittest.TestCase):
         self.test_wrong_pass = {
             "username": "test1",
             "password": "1234users"
+        }
+        self.test_change_pass = {
+            "old password": "1234user",
+            "new password": "5678user"
         }
 
         # binds the app to the current context
@@ -130,6 +133,53 @@ class UserRoutesTestCase(unittest.TestCase):
                                          })
         self.assertEqual(self.response.status_code, 400)
         self.assertIn("Wrong", str(self.response.data))
+
+    def test_reset_password_with_correct_token(self):
+        """Test password change with a token passed into the headers."""
+        """Create a user, login the user, get the token"""
+        self.client.post('/weconnect/api/v2/auth/register',
+                         data=json.dumps(self.test_user),
+                         headers={
+                             'content-type': 'application/json'
+                         })
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.test_login),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.token = json.loads(self.response.data)['token']  # grab the token
+        self.response = self.client.post('/weconnect/api/v2/auth/reset-password',
+                                         data=json.dumps(self.test_change_pass),
+                                         headers={
+                                             'content-type': 'application/json',
+                                             'x-access-token': self.token
+                                         })
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn("Password for test1 changed successfully",
+                      str(self.response.data))
+
+    def test_reset_password_with_incorrect_token(self):
+        """Test password change with a wrong token passed into the headers."""
+        """Create a user, login the user, get the token"""
+        self.client.post('/weconnect/api/v2/auth/register',
+                         data=json.dumps(self.test_user),
+                         headers={
+                             'content-type': 'application/json'
+                         })
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.test_login),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.token = "a wrong token"
+        self.response = self.client.post('/weconnect/api/v2/auth/reset-password',
+                                         data=json.dumps(self.test_change_pass),
+                                         headers={
+                                             'content-type': 'application/json',
+                                             'x-access-token': self.token
+                                         })
+        self.assertEqual(self.response.status_code, 401)
+        self.assertIn("Token is invalid", str(self.response.data))
 
     def tearDown(self):
         """Tear down all initialized variables."""
