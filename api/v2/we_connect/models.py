@@ -1,5 +1,5 @@
 """we_connect/models.py."""
-from we_connect import db
+from run import db
 
 
 class User(db.Model):
@@ -16,17 +16,12 @@ class User(db.Model):
     date_modified = db.Column(db.DateTime,
                               onupdate=db.func.current_timestamp())
 
-    def save(self):
-        """Save a user."""
-        db.session.add(self)
-        db.session.commit()
-
     @staticmethod
     def get_user(username_or_email):
         """Retrieve a user."""
-        query1 = User.query.filter_by(username=username_or_email)
-        query2 = User.query.filter_by(email=username_or_email)
-        return query1
+        query1 = User.query.filter_by(username=username_or_email).first()
+        query2 = User.query.filter_by(email=username_or_email).first()
+        return query1 or query2
 
 
 class Business(db.Model):
@@ -43,11 +38,6 @@ class Business(db.Model):
     date_modified = db.Column(db.DateTime,
                               onupdate=db.func.current_timestamp())
 
-    def save(self):
-        """Save a business."""
-        db.session.add(self)
-        db.session.commit()
-
 
 class Review(db.Model):
     """This class represents the review table."""
@@ -60,8 +50,3 @@ class Review(db.Model):
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(db.DateTime,
                               onupdate=db.func.current_timestamp())
-
-    def save(self):
-        """Save a business."""
-        db.session.add(self)
-        db.session.commit()
