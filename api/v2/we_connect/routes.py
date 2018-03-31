@@ -150,9 +150,9 @@ def register_business(current_user):
     return jsonify(message), 201
 
 
-@app.route('/weconnect/api/v1/businesses/<businessId>', methods=['PUT'])
+@app.route('/weconnect/api/v2/businesses/<business_id>', methods=['PUT'])
 @token_required
-def update_business(current_user, businessId):
+def update_business(current_user, business_id):
     """Update an existing business."""
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
@@ -160,32 +160,44 @@ def update_business(current_user, businessId):
     message = validator.validate(content, 'business_reg')
     if message:
         return jsonify(message), 400
-    to_update = business.view_business(businessId)
-    if to_update:
-        if not to_update['owner']['username'] == current_user['username']:
-            return jsonify(
-                {'msg': 'You are not allowed to edit this business'}), 403
-    message = business.update_business(
-        businessId, content['name'], content['category'],
-        content['description'], content['location'])
-    if not message:
+    to_update = Business.query.filter_by(id=business_id).first()
+    if not to_update:
         return jsonify({'msg': 'Business id is incorrect'}), 400
+    if not to_update.business_owner == current_user.username:
+        return jsonify(
+            {'msg': 'You are not allowed to edit this business'}), 403
+    Business.query.filter_by(id=business_id).update(
+        {
+            'name': content['name'].strip(),
+            'category': content['category'].strip(),
+            'description': content['description'].strip(),
+            'location': content['location'].strip(),
+        })
+    updated_bs = Business.query.filter_by(id=business_id).first()
+    message = {'msg': "Business id {} modified for owner {}".format(
+        updated_bs.id, updated_bs.business_owner),
+        'details': {'name': updated_bs.name,
+                    'category': updated_bs.category,
+                    'description': updated_bs.description,
+                    'location': updated_bs.location,
+                    'owner': updated_bs.business_owner
+                    }}
     return jsonify(message), 201
 
 
-@app.route('/weconnect/api/v1/businesses/<businessId>', methods=['DELETE'])
+@app.route('/weconnect/api/v1/businesses/<business_id>', methods=['DELETE'])
 @token_required
-def delete_business(current_user, businessId):
+def delete_business(current_user, business_id):
     """Remove an existing business."""
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
     content = request.get_json(force=True)
-    to_delete = business.view_business(businessId)
+    to_delete = business.view_business(business_id)
     if to_delete:
         if not to_delete['owner']['username'] == current_user['username']:
             return jsonify(
                 {'msg': 'You are not allowed to delete this business'}), 403
-    message = business.delete_business(businessId)
+    message = business.delete_business(business_id)
     if not message:
         return jsonify({'msg': 'Business id is incorrect'}), 400
     return jsonify(message), 200
@@ -200,19 +212,19 @@ def get_all_businesses():
     return jsonify(businesses), 200
 
 
-@app.route('/weconnect/api/v1/businesses/<businessId>', methods=['GET'])
-def get_business(businessId):
+@app.route('/weconnect/api/v1/businesses/<business_id>', methods=['GET'])
+def get_business(business_id):
     """Retrieve a single business."""
-    message = business.view_business(businessId)
+    message = business.view_business(business_id)
     if not message:
         return jsonify({'msg': 'Business id is incorrect'}), 400
     return jsonify(message), 200
 
 
-@app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
+@app.route('/weconnect/api/v1/businesses/<business_id>/reviews',
            methods=['POST'])
 @token_required
-def add_review_for(current_user, businessId):
+def add_review_for(current_user, business_id):
     """Add a review for a business."""
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
@@ -220,23 +232,23 @@ def add_review_for(current_user, businessId):
     message = validator.validate(content, 'review_reg')
     if message:
         return jsonify(message), 400
-    to_review = business.view_business(businessId)
+    to_review = business.view_business(business_id)
     if not to_review:
         return jsonify({'msg': 'Business id is incorrect'}), 400
     message = review.add_review(content['rating'],
                                 content['body'],
-                                current_user['username'], businessId)
+                                current_user['username'], business_id)
     return jsonify(message), 201
 
 
-@app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
+@app.route('/weconnect/api/v1/businesses/<business_id>/reviews',
            methods=['GET'])
-def get_reviews_for(businessId):
+def get_reviews_for(business_id):
     """Retrieve all reviews for a single business."""
-    get_bs = business.view_business(businessId)
+    get_bs = business.view_business(business_id)
     if not get_bs:
         return jsonify({'msg': 'Business id is incorrect'}), 400
-    reviews = review.view_reviews_for(businessId)
+    reviews = review.view_reviews_for(business_id)
     if not reviews:
         return jsonify({'msg': 'No reviews for this business'}), 200
     return jsonify(reviews), 200
