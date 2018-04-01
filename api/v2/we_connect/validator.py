@@ -51,8 +51,6 @@ class Validator:
             if self.has_numbers.search(obj['name']):
                 return {'msg': 'Name should not contain\
                 numbers or special characters'}
-            if self.has_special.search(obj['description']):
-                return {'msg': 'Description should not contain special chars'}
             if self.has_special.search(obj['name']):
                 return {'msg': 'Name should not contain special chars'}
             if obj['category'] not in self.categs:
