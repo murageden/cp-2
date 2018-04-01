@@ -173,6 +173,7 @@ def update_business(current_user, business_id):
             'description': content['description'].strip(),
             'location': content['location'].strip(),
         })
+    db.session.commit()
     updated_bs = Business.query.filter_by(id=business_id).first()
     message = {'msg': "Business id {} modified for owner {}".format(
         updated_bs.id, updated_bs.business_owner),
@@ -185,29 +186,34 @@ def update_business(current_user, business_id):
     return jsonify(message), 201
 
 
-@app.route('/weconnect/api/v1/businesses/<business_id>', methods=['DELETE'])
+@app.route('/weconnect/api/v2/businesses/<business_id>', methods=['DELETE'])
 @token_required
 def delete_business(current_user, business_id):
     """Remove an existing business."""
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
-    content = request.get_json(force=True)
-    to_delete = business.view_business(business_id)
-    if to_delete:
-        if not to_delete['owner']['username'] == current_user['username']:
-            return jsonify(
-                {'msg': 'You are not allowed to delete this business'}), 403
-    message = business.delete_business(business_id)
-    if not message:
+    to_delete = Business.query.filter_by(id=business_id).first()
+    if not to_delete:
         return jsonify({'msg': 'Business id is incorrect'}), 400
+    if not to_delete.business_owner == current_user.username:
+        return jsonify(
+            {'msg': 'You are not allowed to delete this business'}), 403
+    message = {'msg': 'Business id {} for owner {} deleted successfully'.
+               format(to_delete.id, to_delete.business_owner),
+               'details': {'name': to_delete.name,
+                           'category': to_delete.category,
+                           'description': to_delete.description,
+                           'location': to_delete.location,
+                           'owner': to_delete.business_owner
+                           }}
     return jsonify(message), 200
 
 
 @app.route('/weconnect/api/v1/businesses', methods=['GET'])
 def get_all_businesses():
     """Retrieve the list of all businesses."""
-    businesses = Business.businesses
-    if not len(businesses):
+    businesses = Business.query.all()
+    if not businesses:
         return jsonify({'msg': 'No businesses yet'}), 200
     return jsonify(businesses), 200
 
