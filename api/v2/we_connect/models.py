@@ -29,8 +29,8 @@ class Business(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    category = db.Column(db.String, unique=True, nullable=False)
-    location = db.Column(db.String, unique=True, nullable=False)
+    category = db.Column(db.String, nullable=False)
+    location = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     business_owner = db.Column(db.String, db.ForeignKey('user.username'))
     reviews = db.relationship('Review', backref='review_for', lazy=True)
