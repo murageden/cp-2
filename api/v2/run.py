@@ -7,7 +7,7 @@ from we_connect import create_app
 # initialize sql-alchemy
 db = SQLAlchemy()
 
-config_name = os.getenv('APP_CONFIGURATION')
+config_name = os.getenv('APP_CONFIGURATION') or 'testing'
 app = create_app(config_name)
 
 db.init_app(app)
