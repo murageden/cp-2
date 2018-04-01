@@ -131,6 +131,36 @@ class BusinessRoutesTestCase(unittest.TestCase):
         self.assertEqual(self.response.status_code, 401)
         self.assertIn("Token is invalid", str(self.response.data))
 
+    def test_try_to_update_a_bs_with_non_existing_business_id(self):
+        """Try to update a bs with token and all the details."""
+        """The business id provided is incorrect."""
+        self.client.post('/weconnect/api/v2/auth/register',
+                         data=json.dumps(self.user),
+                         headers={
+                             'content-type': 'application/json'
+                         })
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.login),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.token = json.loads(self.response.data)['token']  # grab the token
+        self.response = self.client.post('/weconnect/api/v2/businesses',
+                                         data=json.dumps(self.test_bs),
+                                         headers={
+                                             'content-type': 'application/json',
+                                             'x-access-token': self.token
+                                         })
+        self.response = self.client.put('/weconnect/api/v2/businesses/1000',
+                                        data=json.dumps(self.test_update_bs),
+                                        headers={
+                                            'content-type': 'application/json',
+                                            'x-access-token': self.token
+                                        })
+        self.assertEqual(self.response.status_code, 400)
+        self.assertIn("Business id is incorrect",
+                      str(self.response.data))
+
     def test_update_bs_with_correct_data_and_token(self):
         """Try to update a bs with token and all the details."""
         self.client.post('/weconnect/api/v2/auth/register',
@@ -157,7 +187,66 @@ class BusinessRoutesTestCase(unittest.TestCase):
                                             'x-access-token': self.token
                                         })
         self.assertEqual(self.response.status_code, 201)
-        self.assertIn("I want to know how",
+        self.assertIn("Ultimate value for money",
+                      str(self.response.data))
+
+    def test_delete_business_with_non_existing_business_id(self):
+        """Try to delete a business with the correct token."""
+        """The business id provided is incorrect."""
+        self.client.post('/weconnect/api/v2/auth/register',
+                         data=json.dumps(self.user),
+                         headers={
+                             'content-type': 'application/json'
+                         })
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.login),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.token = json.loads(self.response.data)['token']  # grab the token
+        self.response = self.client.post('/weconnect/api/v2/businesses',
+                                         data=json.dumps(self.test_bs),
+                                         headers={
+                                             'content-type': 'application/json',
+                                             'x-access-token': self.token
+                                         })
+        self.response = self.client.delete('/weconnect/api/v2/businesses/1000',
+                                           data=json.dumps(self.test_update_bs),
+                                           headers={
+                                               'content-type': 'application/json',
+                                               'x-access-token': self.token
+                                           })
+        self.assertEqual(self.response.status_code, 400)
+        self.assertIn("Business id is incorrect",
+                      str(self.response.data))
+
+    def test_delete_business_with_correct_token(self):
+        """Try to delete a business with the correct token."""
+        self.client.post('/weconnect/api/v2/auth/register',
+                         data=json.dumps(self.user),
+                         headers={
+                             'content-type': 'application/json'
+                         })
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.login),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.token = json.loads(self.response.data)['token']  # grab the token
+        self.response = self.client.post('/weconnect/api/v2/businesses',
+                                         data=json.dumps(self.test_bs),
+                                         headers={
+                                             'content-type': 'application/json',
+                                             'x-access-token': self.token
+                                         })
+        self.response = self.client.delete('/weconnect/api/v2/businesses/1',
+                                           data=json.dumps(self.test_update_bs),
+                                           headers={
+                                               'content-type': 'application/json',
+                                               'x-access-token': self.token
+                                           })
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn("The best prices in town",
                       str(self.response.data))
 
     def tearDown(self):
