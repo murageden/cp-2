@@ -211,12 +211,12 @@ class BusinessRoutesTestCase(unittest.TestCase):
                                              'content-type': 'application/json'
                                          })
         self.token = json.loads(self.response.data)['token']  # grab the token
-        self.response = self.client.post('/weconnect/api/v2/businesses',
-                                         data=json.dumps(self.test_bs),
-                                         headers={
-                                             'content-type': 'application/json',
-                                             'x-access-token': self.token
-                                         })
+        self.client.post('/weconnect/api/v2/businesses',
+                         data=json.dumps(self.test_bs),
+                         headers={
+                             'content-type': 'application/json',
+                             'x-access-token': self.token
+                         })
         self.response = self.client.delete('/weconnect/api/v2/businesses/1000',
                                            data=json.dumps(self.test_update_bs),
                                            headers={
@@ -240,12 +240,12 @@ class BusinessRoutesTestCase(unittest.TestCase):
                                              'content-type': 'application/json'
                                          })
         self.token = json.loads(self.response.data)['token']  # grab the token
-        self.response = self.client.post('/weconnect/api/v2/businesses',
-                                         data=json.dumps(self.test_bs),
-                                         headers={
-                                             'content-type': 'application/json',
-                                             'x-access-token': self.token
-                                         })
+        self.client.post('/weconnect/api/v2/businesses',
+                         data=json.dumps(self.test_bs),
+                         headers={
+                             'content-type': 'application/json',
+                             'x-access-token': self.token
+                         })
         self.response = self.client.delete('/weconnect/api/v2/businesses/1',
                                            data=json.dumps(self.test_update_bs),
                                            headers={
@@ -276,18 +276,18 @@ class BusinessRoutesTestCase(unittest.TestCase):
                                              'content-type': 'application/json'
                                          })
         self.token = json.loads(self.response.data)['token']  # grab the token
-        self.response = self.client.post('/weconnect/api/v2/businesses',
-                                         data=json.dumps(self.test_bs),
-                                         headers={
-                                             'content-type': 'application/json',
-                                             'x-access-token': self.token
-                                         })
+        self.client.post('/weconnect/api/v2/businesses',
+                         data=json.dumps(self.test_bs),
+                         headers={
+                             'content-type': 'application/json',
+                             'x-access-token': self.token
+                         })
         self.response = self.client.get('/weconnect/api/v2/businesses/1')
         self.assertEqual(self.response.status_code, 200)
         self.assertIn("The best prices in town",
                       str(self.response.data))
 
-    def test_retrieving_all_business_returns_businesses(self):
+    def test_retrieving_all_business_returns_all_businesses(self):
         """Retrieve a list of all registered businesses."""
         """Create a user, login the user, grab the token, register bs"""
         self.client.post('/weconnect/api/v2/auth/register',
