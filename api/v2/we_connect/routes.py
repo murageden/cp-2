@@ -9,7 +9,7 @@ import jwt
 # local imports
 from we_connect.models import User
 from we_connect.models import Business
-# from we_connect.models import Review
+from we_connect.models import Review
 from we_connect.validator import Validator
 from run import app, db
 
@@ -241,7 +241,7 @@ def get_business(business_id):
     return jsonify(message), 200
 
 
-@app.route('/weconnect/api/v1/businesses/<business_id>/reviews',
+@app.route('/weconnect/api/v2/businesses/<business_id>/reviews',
            methods=['POST'])
 @token_required
 def add_review_for(current_user, business_id):
@@ -252,23 +252,38 @@ def add_review_for(current_user, business_id):
     message = validator.validate(content, 'review_reg')
     if message:
         return jsonify(message), 400
-    to_review = business.view_business(business_id)
+    to_review = Business.query.filter_by(id=business_id).first()
     if not to_review:
         return jsonify({'msg': 'Business id is incorrect'}), 400
-    message = review.add_review(content['rating'],
-                                content['body'],
-                                current_user['username'], business_id)
+    if to_review.business_owner == current_user.username:
+        return jsonify({'msg': 'This business belongs to you'}), 400
+    review = Review(rating=content['rating'],
+                    body=content['body'].strip(),
+                    owner=current_user,
+                    review_for=to_review)
+    db.session.add(review)
+    db.session.commit()
+    message = {'msg': 'Review for business id {} by user {} created'.format(
+        review.business_id, review.review_owner),
+        'details': {'rating': review.rating,
+                    'body': review.body}}
     return jsonify(message), 201
 
 
-@app.route('/weconnect/api/v1/businesses/<business_id>/reviews',
+@app.route('/weconnect/api/v2/businesses/<business_id>/reviews',
            methods=['GET'])
 def get_reviews_for(business_id):
     """Retrieve all reviews for a single business."""
-    get_bs = business.view_business(business_id)
-    if not get_bs:
+    business = Business.query.filter_by(id=business_id).first()
+    if not business:
         return jsonify({'msg': 'Business id is incorrect'}), 400
-    reviews = review.view_reviews_for(business_id)
+    reviews = Review.query.filter_by(business_id=business_id)
     if not reviews:
         return jsonify({'msg': 'No reviews for this business'}), 200
-    return jsonify(reviews), 200
+    message = {'reviews': [{'rating': review.rating,
+                            'body': review.business_id,
+                            'review by': review.review_owner}
+                           for review in reviews],
+               'business id': business.id,
+               'business owner': business.business_owner}
+    return jsonify(message)
