@@ -43,7 +43,7 @@ class Review(db.Model):
     """This class represents the review table."""
 
     id = db.Column(db.Integer, primary_key=True)
-    rating = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
     body = db.Column(db.String, nullable=False)
     review_owner = db.Column(db.String, db.ForeignKey('user.username'))
     business_id = db.Column(db.Integer, db.ForeignKey('business.id'))
