@@ -209,21 +209,35 @@ def delete_business(current_user, business_id):
     return jsonify(message), 200
 
 
-@app.route('/weconnect/api/v1/businesses', methods=['GET'])
+@app.route('/weconnect/api/v2/businesses', methods=['GET'])
 def get_all_businesses():
     """Retrieve the list of all businesses."""
     businesses = Business.query.all()
     if not businesses:
         return jsonify({'msg': 'No businesses yet'}), 200
-    return jsonify(businesses), 200
+    message = {'businesses': [{'name': business.name,
+                               'category': business.category,
+                               'description': business.description,
+                               'location': business.location,
+                               'owner': business.business_owner}
+                              for business in businesses]}
+    return jsonify(message), 200
 
 
-@app.route('/weconnect/api/v1/businesses/<business_id>', methods=['GET'])
+@app.route('/weconnect/api/v2/businesses/<business_id>', methods=['GET'])
 def get_business(business_id):
     """Retrieve a single business."""
-    message = business.view_business(business_id)
-    if not message:
+    business = Business.query.filter_by(id=business_id).first()
+    if not business:
         return jsonify({'msg': 'Business id is incorrect'}), 400
+    message = {'msg': 'Business id {} owned by {} retrieved successfully'.
+               format(business.id, business.business_owner),
+               'details': {'name': business.name,
+                           'category': business.category,
+                           'description': business.description,
+                           'location': business.location,
+                           'owner': business.business_owner
+                           }}
     return jsonify(message), 200
 
 
