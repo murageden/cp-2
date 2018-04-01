@@ -32,6 +32,13 @@ class BusinessRoutesTestCase(unittest.TestCase):
             "description": "The best prices in town",
             "location": "Near TRM"
         }
+        # for registering a bs
+        self.another_test_bs = {
+            "name": "Test Business",
+            "category": "shop",
+            "description": "Holiday shopping ongoing, enjoy discounts",
+            "location": "Near TRM"
+        }
         self.wrong_test_bs = {
             "name": "  ",
             "category": "shop",
@@ -248,6 +255,67 @@ class BusinessRoutesTestCase(unittest.TestCase):
         self.assertEqual(self.response.status_code, 200)
         self.assertIn("The best prices in town",
                       str(self.response.data))
+
+    def test_retrieving_businesses_when_no_business_has_been_registered(self):
+        """Retrieving business with no business registered."""
+        self.response = self.client.get('/weconnect/api/v2/businesses')
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn("No businesses yet", str(self.response.data))
+
+    def test_retrieving_a_single_business_by_its_id_returns_the_business(self):
+        """Retrieve an existing business using its id."""
+        """Create a user, login the user, grab the token, register bs"""
+        self.client.post('/weconnect/api/v2/auth/register',
+                         data=json.dumps(self.user),
+                         headers={
+                             'content-type': 'application/json'
+                         })
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.login),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.token = json.loads(self.response.data)['token']  # grab the token
+        self.response = self.client.post('/weconnect/api/v2/businesses',
+                                         data=json.dumps(self.test_bs),
+                                         headers={
+                                             'content-type': 'application/json',
+                                             'x-access-token': self.token
+                                         })
+        self.response = self.client.get('/weconnect/api/v2/businesses/1')
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn("The best prices in town",
+                      str(self.response.data))
+
+    def test_retrieving_all_business_returns_businesses(self):
+        """Retrieve a list of all registered businesses."""
+        """Create a user, login the user, grab the token, register bs"""
+        self.client.post('/weconnect/api/v2/auth/register',
+                         data=json.dumps(self.user),
+                         headers={
+                             'content-type': 'application/json'
+                         })
+        self.response = self.client.post('/weconnect/api/v2/auth/login',
+                                         data=json.dumps(self.login),
+                                         headers={
+                                             'content-type': 'application/json'
+                                         })
+        self.token = json.loads(self.response.data)['token']  # grab the token
+        self.response = self.client.post('/weconnect/api/v2/businesses',
+                                         data=json.dumps(self.test_bs),
+                                         headers={
+                                             'content-type': 'application/json',
+                                             'x-access-token': self.token
+                                         })
+        self.response = self.client.post('/weconnect/api/v2/businesses',
+                                         data=json.dumps(self.another_test_bs),
+                                         headers={
+                                             'content-type': 'application/json',
+                                             'x-access-token': self.token
+                                         })
+        self.response = self.client.get('/weconnect/api/v2/businesses')
+        self.assertEqual(self.response.status_code, 200)
+        self.assertEqual(len(json.loads(self.response.data)['businesses']), 2)
 
     def tearDown(self):
         """Tear down all initialized variables."""
