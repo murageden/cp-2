@@ -28,6 +28,8 @@ def token_required(f):
         try:
             data = jwt.decode(token, app.config['SECRET'])
             current_user = User.get_user(data['username'])
+            if current_user.logged_in == False:
+                token = None
         except:
             return jsonify({'msg': 'Token is invalid'}), 401
         return f(current_user, *args, **kwargs)
@@ -198,6 +200,8 @@ def delete_business(current_user, business_id):
     if not to_delete.business_owner == current_user.username:
         return jsonify(
             {'msg': 'You are not allowed to delete this business'}), 403
+    db.session.delete(to_delete)
+    db.session.commit()
     message = {'msg': 'Business id {} for owner {} deleted successfully'.
                format(to_delete.id, to_delete.business_owner),
                'details': {'name': to_delete.name,
@@ -256,7 +260,7 @@ def add_review_for(current_user, business_id):
     if not to_review:
         return jsonify({'msg': 'Business id is incorrect'}), 400
     if to_review.business_owner == current_user.username:
-        return jsonify({'msg': 'This business belongs to you'}), 400
+        return jsonify({'msg': 'Review own business not allowed'}), 400
     review = Review(rating=content['rating'],
                     body=content['body'].strip(),
                     owner=current_user,
