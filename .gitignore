@@ -1,8 +1,10 @@
 api/m-env/*
 *.vscode
 *.coverage
-api/v1/tests/__pycache__/*
-api/v1/we_connect/__pycache__/*
+api/v2/__pycache__/*
+api/v2/tests/__pycache__/*
+api/v2/we_connect/__pycache__/*
 *.pytest_cache
 *.pickle
 m-env
+*.pyc

@@ -33,6 +33,8 @@ def token_required(f):
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
             current_user = User.view_user(data['username'])
+            if current_user['logged_in'] == False:
+                current_user = None
         except:
             return jsonify({'msg': 'Token is invalid'}), 401
         return f(current_user, *args, **kwargs)
@@ -81,9 +83,12 @@ def login_user():
         return jsonify({
             'msg': 'Wrong email or username/password combination'}), 400
     if check_password_hash(user['password'], content['password']):
+        if user['logged_in'] == True:
+            return jsonify({'msg': 'User already logged in'}), 400
+        user['logged_in'] = True
         token = jwt.encode({
             'username': user['username'],
-            'exp': datetime.now() + timedelta(minutes=4)},
+            'exp': datetime.now() + timedelta(minutes=1)},
             app.config['SECRET_KEY'])
         return jsonify({
             'token': token.decode('UTF-8'),
@@ -93,7 +98,11 @@ def login_user():
 
 
 @app.route('/weconnect/api/v1/auth/logout', methods=['POST'])
-def logout():
+@token_required
+def logout(current_user):  
+    if not current_user:
+        return jsonify({'msg': 'User already logged out'}), 200
+    current_user['logged_in'] = False
     return jsonify({'msg': 'User log out successfull'}), 200
 
 
@@ -140,6 +149,7 @@ def register_business(current_user):
     message = business.add_business(content['name'],
     content['category'], content['description'],
     content['location'], current_user['username'])
+    message['msg'] = 'Business created successfully'
     return jsonify(message), 201
 
 
@@ -163,6 +173,7 @@ def update_business(current_user, businessId):
     message = business.update_business(
         businessId, content['name'], content['category'],
         content['description'], content['location'])
+    message['msg'] = 'Buiness updated successfully'
     if not message:
         return jsonify({'msg': 'Business id is incorrect'}), 400
     return jsonify(message), 201
@@ -177,13 +188,13 @@ def delete_business(current_user, businessId):
     """
     if not current_user:
         return jsonify({'msg': 'Token is malformed'}), 400
-    content = request.get_json(force=True)
     to_delete = business.view_business(businessId)
     if to_delete:
         if not to_delete['owner']['username'] == current_user['username']:
             return jsonify(
                 {'msg': 'You are not allowed to delete this business'}), 403
     message = business.delete_business(businessId)
+    message['msg'] = 'Business deleted successfully'
     if not message:
         return jsonify({'msg': 'Business id is incorrect'}), 400
     return jsonify(message), 200
@@ -228,8 +239,11 @@ def add_review_for(current_user, businessId):
     to_review = business.view_business(businessId)
     if not to_review:
         return jsonify({'msg': 'Business id is incorrect'}), 400
+    if to_review['owner']['username'] == current_user['username']:
+        return jsonify({'msg': 'Review own business not allowed'}), 400
     message = review.add_review(content['rating'],
     content['body'], current_user['username'], businessId)
+    message['msg'] = 'Review created successfully'
     return jsonify(message), 201
 
 
