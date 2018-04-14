@@ -17,6 +17,7 @@ class User:
             'name': name,
             'email': email,
             'password': password,
+            'logged_in': False,
             'created on': self.created_on
             }
         self.users.append(self.user_dict)
