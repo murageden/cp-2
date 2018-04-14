@@ -1,5 +1,4 @@
 api/m-env/*
-api/v1/*
 *.vscode
 *.coverage
 api/v2/__pycache__/*
