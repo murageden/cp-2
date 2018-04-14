@@ -7,6 +7,6 @@ install:
   - pip install coveralls
 
 # command to run tests
-script:  nosetests api/v2/tests --with-coverage --cover-package=we_connect
+script:  nosetests api/v1/tests --with-coverage --cover-package=we_connect
 
 after_success: coveralls
