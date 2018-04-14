@@ -255,6 +255,11 @@ class BusinessRoutesTestCase(unittest.TestCase):
         self.assertEqual(self.response.status_code, 200)
         self.assertIn("The best prices in town",
                       str(self.response.data))
+        self.bs_resp = self.client.get('/weconnect/api/v2/businesses/1')
+        self.assertEqual(self.bs_resp.status_code, 400)
+        self.assertIn("Business id is incorrect", 
+                      str(self.bs_resp.data))
+
 
     def test_retrieving_businesses_when_no_business_has_been_registered(self):
         """Retrieving business with no business registered."""
