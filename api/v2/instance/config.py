@@ -21,7 +21,7 @@ class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
 
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://toshiba:1234pass@localhost/test_db'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://andela@localhost:5432/test_db'
     DEBUG = True
 
 
