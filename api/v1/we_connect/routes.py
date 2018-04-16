@@ -51,12 +51,12 @@ def create_user():
     message = validator.validate(content, 'user_reg')
     if message:
         return jsonify(message), 400
-    if User.view_user(content['email']):
+    if User.view_user(content['email'].strip()):
         return jsonify({'msg': 'Email already registered'}), 400
-    if User.view_user(content['username']):
+    if User.view_user(content['username'].strip()):
         return jsonify({'msg': 'Username not available'}), 400
-    new_user = user.add_user(content['name'], content['username'],
-    content['email'], generate_password_hash(content['password']))
+    new_user = user.add_user(content['name'].strip(), content['username'].strip(),
+    content['email'].strip().lower(), generate_password_hash(content['password'].strip()))
     message = {
         'user': {
                     'name': new_user['name'],
@@ -76,13 +76,13 @@ def login_user():
     """
     content = request.get_json(force=True)
     if 'username' in content:
-        user = User.view_user(content['username'])
+        user = User.view_user(content['username'].strip())
     if 'email' in content:
-        user = User.view_user(content['email'])
+        user = User.view_user(content['email'].strip().lower())
     if not user:
         return jsonify({
             'msg': 'Wrong email or username/password combination'}), 400
-    if check_password_hash(user['password'], content['password']):
+    if check_password_hash(user['password'], content['password'].strip()):
         if user['logged_in'] == True:
             return jsonify({'msg': 'User already logged in'}), 400
         user['logged_in'] = True
@@ -121,10 +121,10 @@ def reset_password(current_user):
         return jsonify({'msg': 'Missing old password'}), 400
     if not 'new password' in content:
         return jsonify({'msg': 'Missing new password'}), 400
-    if not check_password_hash(to_reset['password'], content['old password']):
+    if not check_password_hash(to_reset['password'], content['old password'].strip()):
         return jsonify({
             'msg': 'Wrong old password'}), 400
-    to_reset['password'] = generate_password_hash(content['new password'])
+    to_reset['password'] = generate_password_hash(content['new password'].strip())
     reseted_user = User.view_user(current_user['username'])
     message = {
         'name': reseted_user['name'],
@@ -146,10 +146,9 @@ def register_business(current_user):
     message = validator.validate(content, 'business_reg')
     if message:
         return jsonify(message), 400
-    message = business.add_business(content['name'],
-    content['category'], content['description'],
-    content['location'], current_user['username'])
-    message['msg'] = 'Business created successfully'
+    message = business.add_business(content['name'].strip(),
+    content['category'].strip(), content['description'].strip(),
+    content['location'].strip(), current_user['username'])
     return jsonify(message), 201
 
 
@@ -171,9 +170,8 @@ def update_business(current_user, businessId):
             return jsonify(
                 {'msg': 'You are not allowed to edit this business'}), 403
     message = business.update_business(
-        businessId, content['name'], content['category'],
-        content['description'], content['location'])
-    message['msg'] = 'Buiness updated successfully'
+        businessId, content['name'].strip(), content['category'].strip(),
+        content['description'].strip(), content['location'].strip())
     if not message:
         return jsonify({'msg': 'Business id is incorrect'}), 400
     return jsonify(message), 201
@@ -242,7 +240,7 @@ def add_review_for(current_user, businessId):
     if to_review['owner']['username'] == current_user['username']:
         return jsonify({'msg': 'Review own business not allowed'}), 400
     message = review.add_review(content['rating'],
-    content['body'], current_user['username'], businessId)
+    content['body'].strip(), current_user['username'], businessId)
     message['msg'] = 'Review created successfully'
     return jsonify(message), 201
 
