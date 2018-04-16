@@ -116,13 +116,13 @@ class ReviewRoutesTestCase(unittest.TestCase):
             data=json.dumps(self.test_review),
             headers={'content-type': 'application/json',
                      'x-access-token': self.token})
-        self.assertEqual(self.response.status_code, 400)
+        self.assertEqual(self.response.status_code, 201)
         self.assertIn("Review own business not allowed",
                       str(self.response.data))
         self.j_response = json.loads(self.response.data)
         self.assertNotIn(self.j_response, Review.reviews)
 
-    def test_create_review_without_token(self):
+    def test_create_review_with_invalid_token(self):
         """Try to create a review without passing a token"""
         self.response = self.client.post(
             '/weconnect/api/v1/businesses/1/reviews',
