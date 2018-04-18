@@ -99,30 +99,6 @@ class ReviewRoutesTestCase(unittest.TestCase):
         self.j_response = json.loads(self.response.data)
         self.assertIn(self.j_response, Review.reviews)
 
-    def test_try_reviewing_for_own_business(self):
-        """Try to create a review for own business"""
-        self.client.post('/weconnect/api/v1/auth/register',
-                         data=json.dumps(self.test_user),
-                         headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
-                                         data=json.dumps(self.test_login),
-                                         headers={'content-type': 'application/json'})
-        self.token = json.loads(self.response.data)['token']
-        self.client.post('/weconnect/api/v1/businesses',
-                         data=json.dumps(self.test_business),
-                         headers={'content-type': 'application/json',
-                                                  'x-access-token': self.token})
-        self.response = self.client.post(
-            '/weconnect/api/v1/businesses/1/reviews',
-            data=json.dumps(self.test_review),
-            headers={'content-type': 'application/json',
-                     'x-access-token': self.token})
-        self.assertEqual(self.response.status_code, 201)
-        self.assertIn("Review own business not allowed",
-                      str(self.response.data))
-        self.j_response = json.loads(self.response.data)
-        self.assertNotIn(self.j_response, Review.reviews)
-
     def test_create_review_with_invalid_token(self):
         """Try to create a review without passing a token"""
         self.response = self.client.post(
