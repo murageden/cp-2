@@ -99,7 +99,7 @@ class ReviewRoutesTestCase(unittest.TestCase):
         self.j_response = json.loads(self.response.data)
         self.assertIn(self.j_response, Review.reviews)
 
-    def test_create_a_review_for_own_business(self):
+    def test_try_reviewing_for_own_business(self):
         """Try to create a review for own business"""
         self.client.post('/weconnect/api/v1/auth/register',
                          data=json.dumps(self.test_user),
