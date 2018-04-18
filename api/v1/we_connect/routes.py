@@ -41,7 +41,6 @@ def token_required(f):
     return decorated
 
 
-# creates a user account
 @app.route('/weconnect/api/v1/auth/register', methods=['POST'])
 def create_user():
     """
@@ -56,19 +55,18 @@ def create_user():
     if User.view_user(content['username'].strip()):
         return jsonify({'msg': 'Username not available'}), 400
     new_user = user.add_user(content['name'].strip(), content['username'].strip(),
-    content['email'].strip().lower(), generate_password_hash(content['password'].strip()))
+                             content['email'].strip().lower(), generate_password_hash(content['password'].strip()))
     message = {
         'user': {
-                    'name': new_user['name'],
-                    'username': new_user['username'],
-                    'email': new_user['email']
+            'name': new_user['name'],
+            'username': new_user['username'],
+            'email': new_user['email']
         },
         'msg': f"User created successfully on {new_user['created on']}"
     }
     return jsonify(message), 201
 
 
-# logs in a user
 @app.route('/weconnect/api/v1/auth/login', methods=['POST'])
 def login_user():
     """
@@ -94,19 +92,18 @@ def login_user():
             'token': token.decode('UTF-8'),
             'msg': 'Log in successful'}), 200
     return jsonify({
-            'msg': 'Wrong email or username/password combination'}), 400
+        'msg': 'Wrong email or username/password combination'}), 400
 
 
 @app.route('/weconnect/api/v1/auth/logout', methods=['POST'])
 @token_required
-def logout(current_user):  
+def logout(current_user):
     if not current_user:
         return jsonify({'msg': 'User already logged out'}), 200
     current_user['logged_in'] = False
     return jsonify({'msg': 'User log out successfull'}), 200
 
 
-# password reset
 @app.route('/weconnect/api/v1/auth/reset-password', methods=['POST'])
 @token_required
 def reset_password(current_user):
@@ -124,7 +121,8 @@ def reset_password(current_user):
     if not check_password_hash(to_reset['password'], content['old password'].strip()):
         return jsonify({
             'msg': 'Wrong old password'}), 400
-    to_reset['password'] = generate_password_hash(content['new password'].strip())
+    to_reset['password'] = generate_password_hash(
+        content['new password'].strip())
     reseted_user = User.view_user(current_user['username'])
     message = {
         'name': reseted_user['name'],
@@ -147,8 +145,9 @@ def register_business(current_user):
     if message:
         return jsonify(message), 400
     message = business.add_business(content['name'].strip(),
-    content['category'].strip(), content['description'].strip(),
-    content['location'].strip(), current_user['username'])
+                                    content['category'].strip(
+    ), content['description'].strip(),
+        content['location'].strip(), current_user['username'])
     return jsonify(message), 201
 
 
@@ -222,7 +221,7 @@ def get_business(businessId):
 
 
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
-methods=['POST'])
+           methods=['POST'])
 @token_required
 def add_review_for(current_user, businessId):
     """
@@ -240,13 +239,13 @@ def add_review_for(current_user, businessId):
     if to_review['owner']['username'] == current_user['username']:
         return jsonify({'msg': 'Review own business not allowed'}), 400
     message = review.add_review(content['rating'],
-    content['body'].strip(), current_user['username'], businessId)
+                                content['body'].strip(), current_user['username'], businessId)
     message['msg'] = 'Review created successfully'
     return jsonify(message), 201
 
 
 @app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
-methods=['GET'])
+           methods=['GET'])
 def get_reviews_for(businessId):
     """
         retrieves all reviews for a single business
