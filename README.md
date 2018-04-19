@@ -49,3 +49,33 @@ Run `pip install -r requirements.txt`
 export FLASK_APP=api/v1/we_connect/routes.py
 flask run
 ```
+
+
+The API has the following endpoints working:
+
+* Users Endpoints:
+
+Method | Endpoint URL | Description
+--- | --- | ---
+`POST` | `/weconnect/api/v1/auth/register` | Creates a new user account
+`POST` | `/weconnect/api/v1/auth/login` | Logs in a user
+`POST` | `/weconnect/api/v1/auth/logout` | Logs out a user
+`POST` | `/weconnect/api/v1/auth/reset-password` | Resets a user password
+
+* Businesses Endpoints:
+
+Method | Endpoint URL | Description
+--- | --- | ---
+`POST` | `/weconnect/api/v1/businesses` | Registers a business
+`PUT` | `/weconnect/api/v1/businesses/<businessId>` | Modify a business profile
+`DELETE` | `/weconnect/api/v1/businesses/<businessId>` | Deletes a business profile
+`GET` | `/weconnect/api/v1/businesses` | Retrieve a list of all registered businesses
+`GET` | `//weconnect/api/v1/businesses/<businessId>` | Retrieve a single business with this id
+
+* Reviews Endpoints:
+
+Method | Endpoint URL | Description
+--- | --- | ---
+`POST` | `/weconnect/api/v1/businesses/<businessId>/reviews` | Create a review for a business
+`GET` | `/weconnect/api/v1/businesses/<businessId>/reviews` | Retrieve reviews for a business with this id
+
