@@ -26,6 +26,10 @@ class Validator:
                     return {'msg': 'Email is invalid'}
                 if len(str(obj['email'])) < 4:
                     return {'msg': 'Email cannot be less than 4 characters'}
+                if len(str(obj['password'])) < 6:
+                    return {'msg': 'Password cannot be less than 6 characters'}
+                if len(str(obj['password'])) > 255:
+                    return {'msg': 'Password cannot be more than 255 characters'}
                 if len(str(obj['email'])) > 255:
                     return {'msg': 'Email cannot be more than 255 characters'}
                 if len(str(obj['username'])) > 10:
