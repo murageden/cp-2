@@ -1,7 +1,7 @@
 import unittest
-from we_connect.review import Review
-from we_connect.user import User
-from we_connect.business import Business
+from api.review import Review
+from api.user import User
+from api.business import Business
 
 
 class reviewTestCase(unittest.TestCase):

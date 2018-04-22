@@ -2,8 +2,8 @@ import unittest
 import jwt
 from flask import jsonify, json
 # local imports
-from we_connect.routes import app
-from we_connect.user import User
+from api.routes import app
+from api.user import User
 
 
 class UserRoutesTestCase(unittest.TestCase):

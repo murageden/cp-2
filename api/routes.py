@@ -6,10 +6,10 @@ from functools import wraps
 import jwt
 
 # local imports
-from we_connect.user import User
-from we_connect.business import Business
-from we_connect.review import Review
-from we_connect.validator import Validator
+from .user import User
+from .business import Business
+from .review import Review
+from .validator import Validator
 
 app = Flask(__name__)
 
@@ -191,7 +191,6 @@ def delete_business(current_user, businessId):
             return jsonify(
                 {'msg': 'You are not allowed to delete this business'}), 403
     message = business.delete_business(businessId)
-    message['msg'] = 'Business deleted successfully'
     if not message:
         return jsonify({'msg': 'Business id is incorrect'}), 400
     return jsonify(message), 200

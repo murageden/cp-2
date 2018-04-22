@@ -1,5 +1,5 @@
 from datetime import datetime
-from we_connect.user import User
+from .user import User
 
 
 class Review:

@@ -1,6 +1,6 @@
 import unittest
-from we_connect.business import Business
-from we_connect.user import User
+from api.business import Business
+from api.user import User
 
 
 class BusinessTestCase(unittest.TestCase):

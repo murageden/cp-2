@@ -2,10 +2,10 @@ import unittest
 from flask import jsonify, json
 
 # local imports
-from we_connect.routes import app
-from we_connect.review import Review
-from we_connect.user import User
-from we_connect.business import Business
+from api.routes import app
+from api.review import Review
+from api.user import User
+from api.business import Business
 
 
 class ReviewRoutesTestCase(unittest.TestCase):

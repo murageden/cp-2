@@ -73,7 +73,7 @@ class Validator:
                 if obj['body'].strip() == "":
                     return {'msg': 'Empty review not allowed'}
                 if not isinstance(obj['rating'], int):
-                    return {'msg': 'Rating must be values'}
+                    return {'msg': 'Ratings must be values'}
                 if len(str(obj['body'])) < 5:
                     return {'msg': 'Review must be more than 5 characters'}
                 if len(str(obj['body'])) > 255:
