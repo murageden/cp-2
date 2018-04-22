@@ -1,4 +1,4 @@
-# WE CONNECT API [![Build Status](https://travis-ci.org/murageden/bootcamp.svg?branch=cp-2)](https://travis-ci.org/murageden/cp-2) [![Coverage Status](https://coveralls.io/repos/github/murageden/bootcamp/badge.svg?branch=cp-2)](https://coveralls.io/github/murageden/bootcamp?branch=cp-2)
+# WE CONNECT API [![Build Status](https://travis-ci.org/murageden/cp-2.svg?branch=develop)](https://travis-ci.org/murageden/develop) [![Coverage Status](https://coveralls.io/repos/github/murageden/cp-2/badge.svg?branch=develop)](https://coveralls.io/github/murageden/cp-2?branch=develop) 
 
 ## About
 WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with
@@ -21,8 +21,8 @@ Run `git init` on a terminal
 
 
 ### Clone This Repository
-Run `git clone https://github.com/murageden/bootcamp.git`
-Run `cd bootcamp/`
+Run `git clone https://github.com/murageden/cp-2.git`
+Run `cd cp-2/`
 
 
 ### Set up Virtual Environment
