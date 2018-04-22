@@ -1,4 +1,4 @@
-# WE CONNECT API [![Build Status](https://travis-ci.org/murageden/bootcamp.svg?branch=develop)](https://travis-ci.org/murageden/bootcamp) [![Coverage Status](https://coveralls.io/repos/github/murageden/bootcamp/badge.svg?branch=develop)](https://coveralls.io/github/murageden/bootcamp?branch=develop)
+# WE CONNECT API [![Build Status](https://travis-ci.org/murageden/bootcamp.svg?branch=cp-2)](https://travis-ci.org/murageden/bootcamp) [![Coverage Status](https://coveralls.io/repos/github/murageden/bootcamp/badge.svg?branch=cp-2)](https://coveralls.io/github/murageden/bootcamp?branch=cp-2)
 
 ## About
 WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with
@@ -46,7 +46,7 @@ Run `pip install -r requirements.txt`
 
 ### Run the API on Localhost
 ```bash
-export FLASK_APP=api/v1/we_connect/routes.py
+export FLASK_APP=api/routes.py
 flask run
 ```
 
