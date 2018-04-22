@@ -7,3 +7,5 @@ api/v2/*
 *.pickle
 m-env
 *.pyc
+*.DS_Store
+
