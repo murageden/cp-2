@@ -39,7 +39,7 @@ class Validator:
         if con == 'business_reg':
             for prop in self.business_props:
                 if prop not in obj:
-                    return {"msg": f"Missing {prop}"}
+                    return {"msg": f"Please provide {prop}"}
             for prop in self.business_props:
                 if obj[prop].strip() == "":
                     return {'msg': f'Empty {prop} not allowed'}
@@ -59,7 +59,7 @@ class Validator:
         if con == 'review_reg':
             for prop in self.review_props:
                 if prop not in obj:
-                    return {"msg": f"Missing {prop}"}
+                    return {"msg": f"Please provide {prop}"}
             for prop in self.review_props:
                 if obj['body'].strip() == "":
                     return {'msg': 'Empty review not allowed'}
