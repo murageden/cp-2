@@ -3,14 +3,11 @@ from .user import User
 
 
 class Review:
-    """ a variable to hold all the reviews"""
+    """A variable to hold all the reviews"""
     reviews = []
 
     def add_review(self, rating, body, username, businessId):
-        """
-            creates a review for a business and adds it to the list of review
-            returns the added review
-        """
+        """Creates a review for a business and adds it to the list of review returns the added reviews"""
         self.id = 1
         self.created_on = str(datetime.now())
         self.user = User.view_user(username)
@@ -32,7 +29,7 @@ class Review:
         return self.review_dict
 
     def view_reviews_for(self, businessId):
-        """ reads a single review from teh reviews"""
+        """Reads a single review from teh reviews"""
         reviews_for = []
         for review in Review.reviews:
             if review['businessId'] == businessId:

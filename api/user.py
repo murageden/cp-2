@@ -6,10 +6,7 @@ class User:
     users = []
 
     def add_user(self, name, username, email, password):
-        """
-            creates a user and adds user into the users' list
-            returns the added user
-        """
+        """Creates a user and adds user into the users' list returns the added users"""
         self.created_on = str(datetime.now())
         
         self.user_dict = {
@@ -26,7 +23,7 @@ class User:
     
     @staticmethod
     def view_user(username_or_email):
-        """ reads a user by their username or email """
+        """Reads a user by their username or emails"""
         for user in User.users:
             if user['username'] == username_or_email or user['email'] == username_or_email:
                 return user

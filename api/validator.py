@@ -8,24 +8,21 @@ class Validator:
         self.business_props = ['name', 'description', 'location', 'category']
         self.has_numbers = re.compile('[0-9]')
         self.has_special = re.compile('[^\w\s]')
-        self.categs = ['shop', 'supermarket', 'mall', 'school', 'church']
 
     def validate(self, obj, con):
         if con == 'user_reg':
             for prop in self.user_props:
                 if prop not in obj:
-                    return {"msg": "Missing details or invalid format"}
+                    return {"msg": f"Please provide {prop}"}
             for prop in self.user_props:
                 if obj[prop].strip() == "":
-                    return {'msg': 'Empty details not allowed'}
-                if len(str(obj['name'])) < 4:
-                    return {'msg': 'Name must be more than 4 characters'}
+                    return {'msg': f'Empty {prop} not allowed'}
                 if len(str(obj['name'])) > 255:
                     return {'msg': 'Name cannot be more than 255 characters'}
                 if '@' not in str(obj['email']):
                     return {'msg': 'Email is invalid'}
-                if len(str(obj['email'])) < 4:
-                    return {'msg': 'Email cannot be less than 4 characters'}
+                if '.' not in str(obj['email']):
+                    return {'msg': 'Email is invalid'}
                 if len(str(obj['password'])) < 6:
                     return {'msg': 'Password cannot be less than 6 characters'}
                 if len(str(obj['password'])) > 255:
@@ -42,12 +39,10 @@ class Validator:
         if con == 'business_reg':
             for prop in self.business_props:
                 if prop not in obj:
-                    return {"msg": "Missing details"}
+                    return {"msg": f"Missing {prop}"}
             for prop in self.business_props:
                 if obj[prop].strip() == "":
-                    return {'msg': 'Empty details not allowed'}
-                if len(str(obj['name'])) < 6:
-                    return {'msg': 'Name must be more than 6 characters'}
+                    return {'msg': f'Empty {prop} not allowed'}
                 if len(str(obj['name'])) > 255:
                     return {'msg': 'Name must be less than 255 characters'}
                 if len(str(obj['description'])) < 8:
@@ -68,14 +63,12 @@ class Validator:
         if con == 'review_reg':
             for prop in self.review_props:
                 if prop not in obj:
-                    return {"msg": "Missing details or incorrect format"}
+                    return {"msg": f"Missing {prop}"}
             for prop in self.review_props:
                 if obj['body'].strip() == "":
                     return {'msg': 'Empty review not allowed'}
                 if not isinstance(obj['rating'], int):
                     return {'msg': 'Ratings must be values'}
-                if len(str(obj['body'])) < 5:
-                    return {'msg': 'Review must be more than 5 characters'}
                 if len(str(obj['body'])) > 255:
                     return {'msg': 'Review must be less than 255 characters'}
                 if int(obj['rating']) > 5:

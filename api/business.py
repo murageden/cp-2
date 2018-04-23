@@ -3,14 +3,11 @@ from .user import User
 
 
 class Business:
-    """ class variable to hold all businesses """
+    """Class variable to hold all businessesss"""
     businesses = []
 
     def add_business(self, name, category, description, location, owner):
-        """
-            creates a business for a user, adds it to the list of businesses
-            returns the added business
-        """
+        """Creates a business for a user, adds it to the list of businessess"""
         self.id = 1
         self.user = User.view_user(owner)
         self.user_info = {
@@ -33,19 +30,13 @@ class Business:
         return self.business_dict
 
     def view_business(self, id):
-        """
-            reads a single business from the list of businesses
-            finds it by its id
-        """
+        """Reads a single business from the list of businesses given its id"""
         for business in Business.businesses:
             if str(business['id']) == str(id):
                 return business
 
     def update_business(self, id, name, category, description, location):
-        """
-            updates details of an existing business
-            finds it by its id
-        """
+        """Updates a business given its id"""
         self.to_update = self.view_business(id)
         if self.to_update:
             self.to_update['name'] = name
@@ -56,20 +47,14 @@ class Business:
             return self.view_business(id)
 
     def delete_business(self, id):
-        """
-            deletes a single business from the list of businesses
-            finds it by its id
-        """
+        """Deletes a single business from the list of businesses given its id"""
         self.to_remove = self.view_business(id)
         if self.to_remove:
             Business.businesses.remove(self.to_remove)
             return self.to_remove
 
     def search_business_by_location(self, location):
-        """
-            searches for a single business from the list of businesses
-            finds it by its loaction
-        """
+        """Searches for a single business from the list of businesses given its location"""
         self.in_this_location = []
         for business in Business.businesses:
             if business['location'] == location:
@@ -77,10 +62,7 @@ class Business:
         return self.in_this_location
 
     def search_business_by_category(self, category):
-        """
-            searches for a single business from the list of businesses
-            finds it by its category
-        """
+        """Searches for a single business from the list of businesses given its category"""
         self.in_this_categ = []
         for business in Business.businesses:
             if business['category'] == category:
