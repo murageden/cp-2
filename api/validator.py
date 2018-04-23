@@ -45,8 +45,6 @@ class Validator:
                     return {'msg': f'Empty {prop} not allowed'}
                 if len(str(obj['name'])) > 255:
                     return {'msg': 'Name must be less than 255 characters'}
-                if len(str(obj['description'])) < 8:
-                    return {'msg': 'Description must be more than 8 characters'}
                 if len(str(obj['description'])) > 255:
                     return {'msg': 'Description must be less than 255 characters'}
                 if self.has_numbers.search(obj['name']):
@@ -57,8 +55,6 @@ class Validator:
                     return {'msg': 'Name should not contain special chars'}
                 if len(str(obj['location'])) > 255:
                     return {'msg': 'Location string must be less than 255 characters'}
-                if obj['category'] not in self.categs:
-                    return {'msg': 'Only businesses in {} are allowed'.format(str(self.categs))}
 
         if con == 'review_reg':
             for prop in self.review_props:
