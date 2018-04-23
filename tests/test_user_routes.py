@@ -57,7 +57,7 @@ class UserRoutesTestCase(unittest.TestCase):
                                          headers={'content-type': 'application/json'})
         self.assertEqual(self.response.status_code, 400)
         self.assertNotIn("Test Name", str(self.response.data))
-        self.assertIn("Missing details", str(self.response.data))
+        self.assertIn("Please provide username", str(self.response.data))
 
     def test_login_a_user(self):
         """Log in a user with correct user credentials"""

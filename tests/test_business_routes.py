@@ -124,7 +124,7 @@ class BusinessRoutesTestCase(unittest.TestCase):
             headers={'content-type': 'application/json',
                      'x-access-token': self.token})
         self.assertEqual(self.response.status_code, 400)
-        self.assertIn('Missing details', str(self.response.data))
+        self.assertIn('Please provide name', str(self.response.data))
 
     def test_update_business_without_token(self):
         """Try to update business without sending a token"""
