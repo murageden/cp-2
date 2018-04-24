@@ -70,7 +70,7 @@ Method | Endpoint URL | Description
 `PUT` | `/api/v1/businesses/<businessId>` | Modify a business profile
 `DELETE` | `/api/v1/businesses/<businessId>` | Deletes a business profile
 `GET` | `/api/v1/businesses` | Retrieve a list of all registered businesses
-`GET` | `//api/v1/businesses/<businessId>` | Retrieve a single business with this id
+`GET` | `/api/v1/businesses/<businessId>` | Retrieve a single business with this id
 
 * Reviews Endpoints:
 
