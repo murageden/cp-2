@@ -44,7 +44,7 @@ class UserRoutesTestCase(unittest.TestCase):
 
     def test_register_a_user(self):
         """Registering a user with all the required info"""
-        self.response = self.client.post('/weconnect/api/v1/auth/register',
+        self.response = self.client.post('/api/v1/auth/register',
                                          data=json.dumps(self.test_user),
                                          headers={'content-type': 'application/json'})
         self.assertEqual(self.response.status_code, 201)
@@ -52,7 +52,7 @@ class UserRoutesTestCase(unittest.TestCase):
 
     def test_register_a_user_with_missing_details(self):
         """Registering a user with some info missing"""
-        self.response = self.client.post('/weconnect/api/v1/auth/register',
+        self.response = self.client.post('/api/v1/auth/register',
                                          data=json.dumps(self.incomplete_user),
                                          headers={'content-type': 'application/json'})
         self.assertEqual(self.response.status_code, 400)
@@ -61,10 +61,10 @@ class UserRoutesTestCase(unittest.TestCase):
 
     def test_login_a_user(self):
         """Log in a user with correct user credentials"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.response.data)['token']
@@ -75,10 +75,10 @@ class UserRoutesTestCase(unittest.TestCase):
 
     def test_login_user_with_incorrect_credentials(self):
         """Try to log in a user using wrong credentials"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_bad_login),
                                          headers={'content-type': 'application/json'})
         self.j_response = json.loads(self.response.data)
@@ -87,13 +87,13 @@ class UserRoutesTestCase(unittest.TestCase):
 
     def test_login_an_already_logged_in_user(self):
         """Try to log in a user twice"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.client.post('/weconnect/api/v1/auth/login',
+        self.client.post('/api/v1/auth/login',
                          data=json.dumps(self.test_login),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.assertTrue(self.response.status_code == 400)
@@ -101,14 +101,14 @@ class UserRoutesTestCase(unittest.TestCase):
 
     def test_logout_a_user(self):
         """Logging out a user"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.log_resp = self.client.post('/weconnect/api/v1/auth/login',
+        self.log_resp = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.log_resp.data)['token']
-        self.response = self.client.post('/weconnect/api/v1/auth/logout',
+        self.response = self.client.post('/api/v1/auth/logout',
                                          headers={'content-type': 'application/json',
                                                   'x-access-token': self.token})
         self.assertTrue(self.response.status_code, 200)
@@ -116,17 +116,17 @@ class UserRoutesTestCase(unittest.TestCase):
 
     def test_log_out_already_logged_out_user(self):
         """Try to log out a user twice"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.log_resp = self.client.post('/weconnect/api/v1/auth/login',
+        self.log_resp = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.log_resp.data)['token']
-        self.client.post('/weconnect/api/v1/auth/logout',
+        self.client.post('/api/v1/auth/logout',
                          headers={'content-type': 'application/json',
                                                   'x-access-token': self.token})
-        self.response = self.client.post('/weconnect/api/v1/auth/logout',
+        self.response = self.client.post('/api/v1/auth/logout',
                                          headers={'content-type': 'application/json',
                                                   'x-access-token': self.token})
         self.assertTrue(self.response.status_code, 200)
@@ -134,14 +134,14 @@ class UserRoutesTestCase(unittest.TestCase):
 
     def test_reset_user_password(self):
         """Tests for reseting a user password functionality"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.log_resp = self.client.post('/weconnect/api/v1/auth/login',
+        self.log_resp = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.log_resp.data)['token']
-        self.response = self.client.post('/weconnect/api/v1/auth/reset-password',
+        self.response = self.client.post('/api/v1/auth/reset-password',
                                          data=json.dumps(
                                              self.test_reset_pass),
                                          headers={'content-type': 'application/json',

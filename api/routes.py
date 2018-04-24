@@ -41,7 +41,7 @@ def token_required(f):
     return decorated
 
 
-@app.route('/weconnect/api/v1/auth/register', methods=['POST'])
+@app.route('/api/v1/auth/register', methods=['POST'])
 def create_user():
     """Registers a user into the API"""
     content = request.get_json(force=True)
@@ -65,7 +65,7 @@ def create_user():
     return jsonify(message), 201
 
 
-@app.route('/weconnect/api/v1/auth/login', methods=['POST'])
+@app.route('/api/v1/auth/login', methods=['POST'])
 def login_user():
     """Logs in a user"""
     content = request.get_json(force=True)
@@ -91,7 +91,7 @@ def login_user():
         'msg': 'Wrong email or username/password combination'}), 400
 
 
-@app.route('/weconnect/api/v1/auth/logout', methods=['POST'])
+@app.route('/api/v1/auth/logout', methods=['POST'])
 @token_required
 def logout(current_user):
     if not current_user:
@@ -100,7 +100,7 @@ def logout(current_user):
     return jsonify({'msg': 'User log out successfull'}), 200
 
 
-@app.route('/weconnect/api/v1/auth/reset-password', methods=['POST'])
+@app.route('/api/v1/auth/reset-password', methods=['POST'])
 @token_required
 def reset_password(current_user):
     """Changes a password for a user"""
@@ -126,7 +126,7 @@ def reset_password(current_user):
     return jsonify(message)
 
 
-@app.route('/weconnect/api/v1/businesses', methods=['POST'])
+@app.route('/api/v1/businesses', methods=['POST'])
 @token_required
 def register_business(current_user):
     """Registers a business for a user"""
@@ -147,7 +147,7 @@ def register_business(current_user):
     return jsonify(message), 201
 
 
-@app.route('/weconnect/api/v1/businesses/<businessId>', methods=['PUT'])
+@app.route('/api/v1/businesses/<businessId>', methods=['PUT'])
 @token_required
 def update_business(current_user, businessId):
     """Updates an existing business"""
@@ -174,7 +174,7 @@ def update_business(current_user, businessId):
     return jsonify(message), 201
 
 
-@app.route('/weconnect/api/v1/businesses/<businessId>', methods=['DELETE'])
+@app.route('/api/v1/businesses/<businessId>', methods=['DELETE'])
 @token_required
 def delete_business(current_user, businessId):
     """Removes an existing business from the list of all businesses"""
@@ -195,7 +195,7 @@ def delete_business(current_user, businessId):
     return jsonify(message), 200
 
 
-@app.route('/weconnect/api/v1/businesses', methods=['GET'])
+@app.route('/api/v1/businesses', methods=['GET'])
 def get_all_businesses():
     """Retrieves the list of all businesses"""
     businesses = Business.businesses
@@ -204,7 +204,7 @@ def get_all_businesses():
     return jsonify(businesses), 200
 
 
-@app.route('/weconnect/api/v1/businesses/<businessId>', methods=['GET'])
+@app.route('/api/v1/businesses/<businessId>', methods=['GET'])
 def get_business(businessId):
     """Retrieves a single business from the list of all businesses"""
     bs = business.view_business(businessId)
@@ -217,7 +217,7 @@ def get_business(businessId):
     return jsonify(message), 200
 
 
-@app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
+@app.route('/api/v1/businesses/<businessId>/reviews',
            methods=['POST'])
 @token_required
 def add_review_for(current_user, businessId):
@@ -242,7 +242,7 @@ def add_review_for(current_user, businessId):
     return jsonify(message), 201
 
 
-@app.route('/weconnect/api/v1/businesses/<businessId>/reviews',
+@app.route('/api/v1/businesses/<businessId>/reviews',
            methods=['GET'])
 def get_reviews_for(businessId):
     """Retrieves all reviews for a single businesss"""

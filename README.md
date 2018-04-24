@@ -57,25 +57,25 @@ The API has the following endpoints working:
 
 Method | Endpoint URL | Description
 --- | --- | ---
-`POST` | `/weconnect/api/v1/auth/register` | Creates a new user account
-`POST` | `/weconnect/api/v1/auth/login` | Logs in a user
-`POST` | `/weconnect/api/v1/auth/logout` | Logs out a user
-`POST` | `/weconnect/api/v1/auth/reset-password` | Resets a user password
+`POST` | `/api/v1/auth/register` | Creates a new user account
+`POST` | `/api/v1/auth/login` | Logs in a user
+`POST` | `/api/v1/auth/logout` | Logs out a user
+`POST` | `/api/v1/auth/reset-password` | Resets a user password
 
 * Businesses Endpoints:
 
 Method | Endpoint URL | Description
 --- | --- | ---
-`POST` | `/weconnect/api/v1/businesses` | Registers a business
-`PUT` | `/weconnect/api/v1/businesses/<businessId>` | Modify a business profile
-`DELETE` | `/weconnect/api/v1/businesses/<businessId>` | Deletes a business profile
-`GET` | `/weconnect/api/v1/businesses` | Retrieve a list of all registered businesses
-`GET` | `//weconnect/api/v1/businesses/<businessId>` | Retrieve a single business with this id
+`POST` | `/api/v1/businesses` | Registers a business
+`PUT` | `/api/v1/businesses/<businessId>` | Modify a business profile
+`DELETE` | `/api/v1/businesses/<businessId>` | Deletes a business profile
+`GET` | `/api/v1/businesses` | Retrieve a list of all registered businesses
+`GET` | `//api/v1/businesses/<businessId>` | Retrieve a single business with this id
 
 * Reviews Endpoints:
 
 Method | Endpoint URL | Description
 --- | --- | ---
-`POST` | `/weconnect/api/v1/businesses/<businessId>/reviews` | Create a review for a business
-`GET` | `/weconnect/api/v1/businesses/<businessId>/reviews` | Retrieve reviews for a business with this id
+`POST` | `/api/v1/businesses/<businessId>/reviews` | Create a review for a business
+`GET` | `/api/v1/businesses/<businessId>/reviews` | Retrieve reviews for a business with this id
 

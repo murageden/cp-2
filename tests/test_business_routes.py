@@ -48,14 +48,14 @@ class BusinessRoutesTestCase(unittest.TestCase):
 
     def test_register_business_with_complete_data(self):
         """Registers a business sending all the required info"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.response.data)['token']
-        self.response = self.client.post('/weconnect/api/v1/businesses',
+        self.response = self.client.post('/api/v1/businesses',
                                          data=json.dumps(
                                              self.test_business),
                                          headers={'content-type': 'application/json',
@@ -65,14 +65,14 @@ class BusinessRoutesTestCase(unittest.TestCase):
 
     def test_register_business_without_token(self):
         """Registers a business without sending the required token"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.response.data)['token']
-        self.response = self.client.post('/weconnect/api/v1/businesses',
+        self.response = self.client.post('/api/v1/businesses',
                                          data=json.dumps(self.test_business),
                                          headers={'content-type': 'application/json'})
         self.j_response = json.loads(self.response.data)
@@ -82,20 +82,20 @@ class BusinessRoutesTestCase(unittest.TestCase):
 
     def test_update_business_with_correct_data_and_token(self):
         """Updates a business, sending all required data"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.response.data)['token']
-        self.response = self.client.post('/weconnect/api/v1/businesses',
+        self.response = self.client.post('/api/v1/businesses',
                                          data=json.dumps(self.test_business),
                                          headers={'content-type': 'application/json',
                                                   'x-access-token': self.token})
         self.j_response = json.loads(self.response.data)
         self.response = self.client.put(
-            '/weconnect/api/v1/businesses/1',
+            '/api/v1/businesses/1',
             data=json.dumps(self.update_business),
             headers={'content-type': 'application/json',
                      'x-access-token': self.token})
@@ -104,20 +104,20 @@ class BusinessRoutesTestCase(unittest.TestCase):
 
     def test_update_business_with_incorrect_data_and_token(self):
         """Try to update a business sending all data except token"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.response.data)['token']
-        self.response = self.client.post('/weconnect/api/v1/businesses',
+        self.response = self.client.post('/api/v1/businesses',
                                          data=json.dumps(self.test_business),
                                          headers={'content-type': 'application/json',
                                                   'x-access-token': self.token})
         self.j_response = json.loads(self.response.data)
         self.response = self.client.put(
-            '/weconnect/api/v1/businesses/1',
+            '/api/v1/businesses/1',
             data=json.dumps(self.incomplete_bs),
             headers={'content-type': 'application/json',
                      'x-access-token': self.token})
@@ -126,7 +126,7 @@ class BusinessRoutesTestCase(unittest.TestCase):
 
     def test_update_business_without_token(self):
         """Try to update business without sending a token"""
-        self.response = self.client.put('/weconnect/api/v1/businesses/1',
+        self.response = self.client.put('/api/v1/businesses/1',
                                         data=json.dumps(self.update_business),
                                         headers={'content-type': 'application/json'})
         self.j_response = json.loads(self.response.data)
@@ -136,20 +136,20 @@ class BusinessRoutesTestCase(unittest.TestCase):
 
     def test_delete_own_business_with_token(self):
         """Delete an own business sending the token"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.response.data)['token']
-        self.resp_reg = self.client.post('/weconnect/api/v1/businesses',
+        self.resp_reg = self.client.post('/api/v1/businesses',
                                          data=json.dumps(self.test_business),
                                          headers={'content-type': 'application/json',
                                                   'x-access-token': self.token})
         self.js_resp = json.loads(self.resp_reg.data)
         self.response = self.client.delete(
-            '/weconnect/api/v1/businesses/1',
+            '/api/v1/businesses/1',
             data=json.dumps({}),
             headers={'content-type': 'application/json',
                      'x-access-token': self.token})
@@ -159,19 +159,19 @@ class BusinessRoutesTestCase(unittest.TestCase):
 
     def test_delete_business_without_token(self):
         """Try to delete a business without providing the token"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.response.data)['token']
-        self.resp_reg = self.client.post('/weconnect/api/v1/businesses',
+        self.resp_reg = self.client.post('/api/v1/businesses',
                                          data=json.dumps(self.test_business),
                                          headers={'content-type': 'application/json'})
         self.js_resp = json.loads(self.resp_reg.data)
         self.response = self.client.delete(
-            '/weconnect/api/v1/businesses/1',
+            '/api/v1/businesses/1',
             data=json.dumps({}),
             headers={'content-type': 'application/json'})
         self.assertEqual(self.response.status_code, 401)

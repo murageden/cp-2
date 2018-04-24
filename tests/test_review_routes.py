@@ -68,30 +68,30 @@ class ReviewRoutesTestCase(unittest.TestCase):
 
     def test_create_review_with_complete_data_and_token(self):
         """Creating a review passing the correct data and token"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token1 = json.loads(self.response.data)['token']
-        self.client.post('/weconnect/api/v1/businesses',
+        self.client.post('/api/v1/businesses',
                          data=json.dumps(self.test_business),
                          headers={'content-type': 'application/json',
                                                   'x-access-token': self.token1})
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.another_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.another_login),
                                          headers={'content-type': 'application/json'})
         self.token2 = json.loads(self.response.data)['token']
-        self.client.post('/weconnect/api/v1/businesses',
+        self.client.post('/api/v1/businesses',
                          data=json.dumps(self.test_business),
                          headers={'content-type': 'application/json',
                                                   'x-access-token': self.token2})
         self.response = self.client.post(
-            '/weconnect/api/v1/businesses/2/reviews',
+            '/api/v1/businesses/2/reviews',
             data=json.dumps(self.test_review),
             headers={'content-type': 'application/json',
                      'x-access-token': self.token1})
@@ -101,7 +101,7 @@ class ReviewRoutesTestCase(unittest.TestCase):
     def test_create_review_with_invalid_token(self):
         """Try to create a review without passing a token"""
         self.response = self.client.post(
-            '/weconnect/api/v1/businesses/1/reviews',
+            '/api/v1/businesses/1/reviews',
             data=json.dumps(self.test_review),
             headers={'content-type': 'application/json',
                      'x-access-token': 'nonthing here'})
@@ -110,20 +110,20 @@ class ReviewRoutesTestCase(unittest.TestCase):
 
     def test_create_review_with_non_value_ratings(self):
         """Try to create a review with non value ratings"""
-        self.client.post('/weconnect/api/v1/auth/register',
+        self.client.post('/api/v1/auth/register',
                          data=json.dumps(self.test_user),
                          headers={'content-type': 'application/json'})
-        self.response = self.client.post('/weconnect/api/v1/auth/login',
+        self.response = self.client.post('/api/v1/auth/login',
                                          data=json.dumps(self.test_login),
                                          headers={'content-type': 'application/json'})
         self.token = json.loads(self.response.data)['token']
-        self.resp_reg = self.client.post('/weconnect/api/v1/businesses',
+        self.resp_reg = self.client.post('/api/v1/businesses',
                                          data=json.dumps(self.test_business),
                                          headers={'content-type': 'application/json',
                                                   'x-access-token': self.token})
         self.js_resp = json.loads(self.resp_reg.data)
         self.response = self.client.post(
-            f'/weconnect/api/v1/businesses/{self.js_resp["details"]["id"]}/reviews',
+            f'/api/v1/businesses/{self.js_resp["details"]["id"]}/reviews',
             data=json.dumps(self.wrong_review),
             headers={'content-type': 'application/json',
                      'x-access-token': self.token})
