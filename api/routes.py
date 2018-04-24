@@ -141,7 +141,7 @@ def register_business(current_user):
     ), content['description'].strip(),
         content['location'].strip(), current_user['username'])
     message = {
-        'msg': f'Business id {new_bs["id"]} created successfully'
+        'msg': f'Business id {new_bs["id"]} created successfully',
                 'details': new_bs
     }
     return jsonify(message), 201
@@ -168,7 +168,7 @@ def update_business(current_user, businessId):
     if not updated_bs:
         return jsonify({'msg': 'Business for id provided does not exist'}), 400
     message = {
-        'msg': f'Business id {updated_bs["id"]} updated successfully'
+        'msg': f'Business id {updated_bs["id"]} updated successfully',
                 'details': updated_bs
     }
     return jsonify(message), 201
@@ -189,7 +189,7 @@ def delete_business(current_user, businessId):
     if not deleted_bs:
         return jsonify({'msg': 'Business for id provided does not exist'}), 400
     message = {
-        'msg': f'Business id {deleted_bs["id"]} deleted successfully'
+        'msg': f'Business id {deleted_bs["id"]} deleted successfully',
                 'details': deleted_bs
     }
     return jsonify(message), 200
@@ -211,7 +211,7 @@ def get_business(businessId):
     if not bs:
         return jsonify({'msg': 'Business for id provided does not exist'}), 400
     message = {
-        'msg': f'Business id {bs["id"]} retrieved successfully'
+        'msg': f'Business id {bs["id"]} retrieved successfully',
                 'details': bs
     }
     return jsonify(message), 200
@@ -236,7 +236,7 @@ def add_review_for(current_user, businessId):
     added_review = review.add_review(content['rating'],
                                      content['body'].strip(), current_user['username'], businessId)
     message = {
-        'msg': f'Review added successfully'
+        'msg': f'Review added successfully',
                 'details': added_review
     }
     return jsonify(message), 201
