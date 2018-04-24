@@ -48,14 +48,14 @@ class ReviewRoutesTestCase(unittest.TestCase):
         }
         # complete business info
         self.test_business = {
-            "name": "Bizna Poa",
+            "name": "bsna Poa",
             "category": "shop",
             "description": "The best prices in town",
             "location": "Near TRM"
         }
         # complete business info
         self.another_business = {
-            "name": "Bizna Ingine",
+            "name": "bsna Ingine",
             "category": "supermarket",
             "description": "Better value, better prices",
             "location": "Along Thika Super Highway"

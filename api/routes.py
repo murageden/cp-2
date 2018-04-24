@@ -136,13 +136,13 @@ def register_business(current_user):
     message = validator.validate(content, 'business_reg')
     if message:
         return jsonify(message), 400
-    new_biz = business.add_business(content['name'].strip(),
+    new_bs = business.add_business(content['name'].strip(),
                                     content['category'].strip(
     ), content['description'].strip(),
         content['location'].strip(), current_user['username'])
     message = {
-        'msg': f'Business id {new_biz["id"]} created successfully'
-                'details': new_biz
+        'msg': f'Business id {new_bs["id"]} created successfully'
+                'details': new_bs
     }
     return jsonify(message), 201
 
@@ -162,14 +162,14 @@ def update_business(current_user, businessId):
         if not to_update['owner']['username'] == current_user['username']:
             return jsonify(
                 {'msg': 'You are not allowed to edit this business'}), 403
-    updated_biz = business.update_business(
+    updated_bs = business.update_business(
         businessId, content['name'].strip(), content['category'].strip(),
         content['description'].strip(), content['location'].strip())
-    if not updated_biz:
+    if not updated_bs:
         return jsonify({'msg': 'Business for id provided does not exist'}), 400
     message = {
-        'msg': f'Business id {updated_biz["id"]} updated successfully'
-                'details': updated_biz
+        'msg': f'Business id {updated_bs["id"]} updated successfully'
+                'details': updated_bs
     }
     return jsonify(message), 201
 
@@ -185,12 +185,12 @@ def delete_business(current_user, businessId):
         if not to_delete['owner']['username'] == current_user['username']:
             return jsonify(
                 {'msg': 'You are not allowed to delete this business'}), 403
-    deleted_biz = business.delete_business(businessId)
-    if not deleted_biz:
+    deleted_bs = business.delete_business(businessId)
+    if not deleted_bs:
         return jsonify({'msg': 'Business for id provided does not exist'}), 400
     message = {
-        'msg': f'Business id {deleted_biz["id"]} deleted successfully'
-                'details': deleted_biz
+        'msg': f'Business id {deleted_bs["id"]} deleted successfully'
+                'details': deleted_bs
     }
     return jsonify(message), 200
 
@@ -207,12 +207,12 @@ def get_all_businesses():
 @app.route('/weconnect/api/v1/businesses/<businessId>', methods=['GET'])
 def get_business(businessId):
     """Retrieves a single business from the list of all businesses"""
-    biz = business.view_business(businessId)
-    if not biz:
+    bs = business.view_business(businessId)
+    if not bs:
         return jsonify({'msg': 'Business for id provided does not exist'}), 400
     message = {
-        'msg': f'Business id {biz["id"]} retrieved successfully'
-                'details': biz
+        'msg': f'Business id {bs["id"]} retrieved successfully'
+                'details': bs
     }
     return jsonify(message), 200
 

@@ -11,7 +11,7 @@ class BusinessRoutesTestCase(unittest.TestCase):
         self.client = app.test_client()
         # complete business info
         self.test_business = {
-            "name": "Bizna Poa",
+            "name": "bsna Poa",
             "category": "shop",
             "description": "The best prices in town",
             "location": "Near TRM"
@@ -24,7 +24,7 @@ class BusinessRoutesTestCase(unittest.TestCase):
         }
         # updating a business
         self.update_business = {
-            "name": "Updated Bizna",
+            "name": "Updated bsna",
             "category": "supermarket",
             "description": "The best prices in town",
             "location": "TRM"
@@ -101,7 +101,7 @@ class BusinessRoutesTestCase(unittest.TestCase):
             headers={'content-type': 'application/json',
                      'x-access-token': self.token})
         self.j_response = json.loads(self.response.data)
-        self.assertIn('Updated Bizna', str(self.j_response))
+        self.assertIn('Updated bsna', str(self.j_response))
         self.assertIn(self.j_response, Business.businesses)
 
     def test_update_business_with_incorrect_data_and_token(self):
