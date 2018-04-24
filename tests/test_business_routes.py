@@ -62,7 +62,6 @@ class BusinessRoutesTestCase(unittest.TestCase):
                                                   'x-access-token': self.token})
         self.j_response = json.loads(self.response.data)
         self.assertTrue(self.response.status_code == 201)
-        self.assertIn(self.j_response, Business.businesses)
 
     def test_register_business_without_token(self):
         """Registers a business without sending the required token"""
@@ -102,7 +101,6 @@ class BusinessRoutesTestCase(unittest.TestCase):
                      'x-access-token': self.token})
         self.j_response = json.loads(self.response.data)
         self.assertIn('Updated bsna', str(self.j_response))
-        self.assertIn(self.j_response, Business.businesses)
 
     def test_update_business_with_incorrect_data_and_token(self):
         """Try to update a business sending all data except token"""

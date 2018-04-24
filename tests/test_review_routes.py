@@ -97,7 +97,6 @@ class ReviewRoutesTestCase(unittest.TestCase):
                      'x-access-token': self.token1})
         self.assertEqual(self.response.status_code, 201)
         self.j_response = json.loads(self.response.data)
-        self.assertIn(self.j_response, Review.reviews)
 
     def test_create_review_with_invalid_token(self):
         """Try to create a review without passing a token"""
@@ -124,7 +123,7 @@ class ReviewRoutesTestCase(unittest.TestCase):
                                                   'x-access-token': self.token})
         self.js_resp = json.loads(self.resp_reg.data)
         self.response = self.client.post(
-            f'/weconnect/api/v1/businesses/{self.js_resp["id"]}/reviews',
+            f'/weconnect/api/v1/businesses/{self.js_resp["details"]["id"]}/reviews',
             data=json.dumps(self.wrong_review),
             headers={'content-type': 'application/json',
                      'x-access-token': self.token})
