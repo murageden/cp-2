@@ -1,6 +1,0 @@
-build:
-  languages:
-    - python
-run:
-  web: export FLASK_APP=api/routes.py
-  web: flask run
