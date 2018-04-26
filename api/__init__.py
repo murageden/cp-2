@@ -83,7 +83,7 @@ def login_user():
         user['logged_in'] = True
         token = jwt.encode({
             'username': user['username'],
-            'exp': datetime.now() + timedelta(minutes=1)},
+            'exp': datetime.now() + timedelta(minutes=300)},
             app.config['SECRET_KEY'])
         return jsonify({
             'token': token.decode('UTF-8'),
@@ -106,7 +106,7 @@ def logout(current_user):
 def reset_password(current_user):
     """Changes a password for a user"""
     if not current_user:
-        return jsonify({'msg': 'Token is malformed'}), 400
+        return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 400
     content = request.get_json(force=True)
     to_reset = User.view_user(current_user['username'])
     if not 'old password' in content:
@@ -132,13 +132,13 @@ def reset_password(current_user):
 def register_business(current_user):
     """Registers a business for a user"""
     if not current_user:
-        return jsonify({'msg': 'Token is malformed'}), 400
+        return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 400
     content = request.get_json(force=True)
     message = validator.validate(content, 'business_reg')
     if message:
         return jsonify(message), 400
     new_bs = business.add_business(content['name'].strip(),
-                                    content['category'].strip(
+                                   content['category'].strip(
     ), content['description'].strip(),
         content['location'].strip(), current_user['username'])
     message = {
@@ -153,7 +153,7 @@ def register_business(current_user):
 def update_business(current_user, businessId):
     """Updates an existing business"""
     if not current_user:
-        return jsonify({'msg': 'Token is malformed'}), 400
+        return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 400
     content = request.get_json(force=True)
     message = validator.validate(content, 'business_reg')
     if message:
@@ -180,7 +180,7 @@ def update_business(current_user, businessId):
 def delete_business(current_user, businessId):
     """Removes an existing business from the list of all businesses"""
     if not current_user:
-        return jsonify({'msg': 'Token is malformed'}), 400
+        return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 400
     to_delete = business.view_business(businessId)
     if to_delete:
         if not to_delete['owner']['username'] == current_user['username']:
@@ -224,7 +224,7 @@ def get_business(businessId):
 def add_review_for(current_user, businessId):
     """Adds a review to a business"""
     if not current_user:
-        return jsonify({'msg': 'Token is malformed'}), 400
+        return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 400
     content = request.get_json(force=True)
     message = validator.validate(content, 'review_reg')
     if message:
