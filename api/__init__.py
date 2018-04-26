@@ -31,10 +31,13 @@ def token_required(f):
             token = request.headers['x-access-token']
         if not token:
             return jsonify({'msg': 'Token is missing'}), 401
-        data = jwt.decode(token, app.config['SECRET_KEY'])
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+        except:
+            return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 401
         current_user = User.view_user(data['username'])
         if not current_user:
-        	return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 401
+            return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 401
         if current_user['logged_in'] == False:
             current_user = None
         return f(current_user, *args, **kwargs)
