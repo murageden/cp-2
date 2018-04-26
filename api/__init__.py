@@ -37,7 +37,7 @@ def token_required(f):
             if current_user['logged_in'] == False:
                 current_user = None
         except:
-            return jsonify({'msg': 'Token is invalid'}), 401
+            return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 401
         return f(current_user, *args, **kwargs)
     return decorated
 
