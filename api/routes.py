@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response
+from flask import jsonify, request, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from datetime import timedelta
@@ -10,11 +10,7 @@ from .user import User
 from .business import Business
 from .review import Review
 from .validator import Validator
-
-app = Flask(__name__)
-
-app.config['DEBUG'] = True
-app.config['SECRET_KEY'] = 'p9Bv<3Eid9%$i01'
+from api import app
 
 business = Business()
 user = User()
