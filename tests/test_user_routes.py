@@ -2,7 +2,7 @@ import unittest
 import jwt
 from flask import jsonify, json
 # local imports
-from api.routes import app
+from api import app
 from api.user import User
 
 
