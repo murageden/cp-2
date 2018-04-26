@@ -31,16 +31,12 @@ class Business:
 
     def view_business(self, id):
         """Reads a single business from the list of businesses given its id"""
-        if not isinstance(id, int):
-            return {'msg': 'Please provide a valid business id'}
         for business in Business.businesses:
             if str(business['id']) == str(id):
                 return business
 
     def update_business(self, id, name, category, description, location):
         """Updates a business given its id"""
-        if not isinstance(id, int):
-            return {'msg': 'Please provide a valid business id'}
         self.to_update = self.view_business(id)
         if self.to_update:
             self.to_update['name'] = name
@@ -52,8 +48,6 @@ class Business:
 
     def delete_business(self, id):
         """Deletes a single business from the list of businesses given its id"""
-        if not isinstance(id, int):
-            return {'msg': 'Please provide a valid business id'}
         self.to_remove = self.view_business(id)
         if self.to_remove:
             Business.businesses.remove(self.to_remove)
