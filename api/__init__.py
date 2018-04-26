@@ -78,13 +78,14 @@ def login_user():
         return jsonify({
             'msg': 'Wrong email or username/password combination'}), 400
     if check_password_hash(user['password'], content['password'].strip()):
-        if user['logged_in'] == True:
-            return jsonify({'msg': 'User already logged in'}), 400
-        user['logged_in'] = True
         token = jwt.encode({
             'username': user['username'],
             'exp': datetime.now() + timedelta(minutes=300)},
             app.config['SECRET_KEY'])
+        if user['logged_in'] == True:
+            return jsonify({'token': token.decode('UTF-8'),
+                            'msg': 'User already logged in'}), 400
+        user['logged_in'] = True
         return jsonify({
             'token': token.decode('UTF-8'),
             'msg': 'Log in successful'}), 200
