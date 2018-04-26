@@ -46,7 +46,7 @@ Run `pip install -r requirements.txt`
 
 ### Run the API on Localhost
 ```bash
-export FLASK_APP=api/routes.py
+export FLASK_APP=api
 flask run
 ```
 
