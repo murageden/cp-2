@@ -96,7 +96,7 @@ def login_user():
 @app.route('/api/v1/auth/logout', methods=['POST'])
 @token_required
 def logout(current_user):
-    if not current_user:
+    if current_user == None:
         return jsonify({'msg': 'User already logged out'}), 200
     current_user['logged_in'] = False
     return jsonify({'msg': 'User log out successfull'}), 200
@@ -106,7 +106,7 @@ def logout(current_user):
 @token_required
 def reset_password(current_user):
     """Changes a password for a user"""
-    if not current_user:
+    if current_user == None:
         return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 400
     content = request.get_json(force=True)
     to_reset = User.view_user(current_user['username'])
@@ -132,7 +132,7 @@ def reset_password(current_user):
 @token_required
 def register_business(current_user):
     """Registers a business for a user"""
-    if not current_user:
+    if current_user == None:
         return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 400
     content = request.get_json(force=True)
     message = validator.validate(content, 'business_reg')
@@ -153,7 +153,7 @@ def register_business(current_user):
 @token_required
 def update_business(current_user, businessId):
     """Updates an existing business"""
-    if not current_user:
+    if current_user == None:
         return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 400
     content = request.get_json(force=True)
     message = validator.validate(content, 'business_reg')
@@ -180,7 +180,7 @@ def update_business(current_user, businessId):
 @token_required
 def delete_business(current_user, businessId):
     """Removes an existing business from the list of all businesses"""
-    if not current_user:
+    if current_user == None:
         return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 400
     to_delete = business.view_business(businessId)
     if to_delete:
@@ -224,7 +224,7 @@ def get_business(businessId):
 @token_required
 def add_review_for(current_user, businessId):
     """Adds a review to a business"""
-    if not current_user:
+    if current_user == None:
         return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 400
     content = request.get_json(force=True)
     message = validator.validate(content, 'review_reg')
