@@ -25,6 +25,10 @@ class Validator:
                     return {'msg': 'Email is invalid'}
                 if len(str(obj['password'])) < 6:
                     return {'msg': 'Password cannot be less than 6 characters'}
+                if not self.has_special.search(obj['password']):
+                    return {'msg': 'Strong password must have at least one special character'}
+                if not self.has_numbers.search(obj['password']):
+                    return {'msg': 'Strong password must have at least one number character'}
                 if len(str(obj['password'])) > 255:
                     return {'msg': 'Password cannot be more than 255 characters'}
                 if len(str(obj['email'])) > 255:
