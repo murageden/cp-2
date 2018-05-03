@@ -29,7 +29,7 @@ Run `cd we-connect-v1/`
 Run the following code on a Windows terminal:
 
 ```bash
-virtualenv venv
+virtualenv --python=python3 venv
 source venv/Scripts/activate
 ```
 or if on Linux/Unix terminal:
