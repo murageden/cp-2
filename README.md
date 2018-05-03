@@ -1,4 +1,4 @@
-# WE CONNECT API [![Build Status](https://travis-ci.org/murageden/cp-2.svg?branch=develop)](https://travis-ci.org/murageden/cp-2) [![Coverage Status](https://coveralls.io/repos/github/murageden/cp-2/badge.svg?branch=develop)](https://coveralls.io/github/murageden/cp-2?branch=develop) [![CircleCI](https://circleci.com/gh/murageden/cp-2/tree/develop.svg?style=svg)](https://circleci.com/gh/murageden/cp-2/tree/develop) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6ada5fc7ae404ba4a34df38000943f94)](https://www.codacy.com/app/murageden/cp-2?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=murageden/cp-2&amp;utm_campaign=Badge_Grade)
+# WE CONNECT API [![Build Status](https://travis-ci.org/murageden/we-connect-v1.svg?branch=develop)](https://travis-ci.org/murageden/we-connect-v1) [![Coverage Status](https://coveralls.io/repos/github/murageden/we-connect-v1/badge.svg?branch=develop)](https://coveralls.io/github/murageden/we-connect-v1?branch=develop) [![CircleCI](https://circleci.com/gh/murageden/we-connect-v1/tree/develop.svg?style=svg)](https://circleci.com/gh/murageden/we-connect-v1/tree/develop) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6ada5fc7ae404ba4a34df38000943f94)](https://www.codacy.com/app/murageden/we-connect-v1?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=murageden/we-connect-v1&amp;utm_campaign=Badge_Grade)
 
 ## About
 WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with. This app is live on https://weconn.herokuapp.com/
@@ -21,8 +21,8 @@ Run `git init` on a terminal
 
 
 ### Clone This Repository
-Run `git clone https://github.com/murageden/cp-2.git`
-Run `cd cp-2/`
+Run `git clone https://github.com/murageden/we-connect-v1.git`
+Run `cd we-connect-v1/`
 
 
 ### Set up Virtual Environment
