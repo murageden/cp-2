@@ -35,7 +35,7 @@ source venv/Scripts/activate
 or if on Linux/Unix terminal:
 
 ```bash
-virtualenv venv
+virtualenv --python=python3 venv
 source venv/bin/activate
 ```
 
