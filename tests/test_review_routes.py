@@ -27,24 +27,24 @@ class ReviewRoutesTestCase(unittest.TestCase):
             "name": "Mark Maroiko",
             "email": "maroikomark@test1.com",
             "username": "mar44",
-            "password": "pass1238"
+            "password": "2$4pass"
         }
         # complete login info
         self.test_login = {
             "username": "mar44",
-            "password": "pass1238"
+            "password": "2$4pass"
         }
         # complete info to create a user
         self.another_user = {
             "name": "Peter Marangi",
             "email": "pmarangi@gmail.com",
             "username": "marangip",
-            "password": "1234pass"
+            "password": "2$4pass"
         }
         # complete login info
         self.another_login = {
             "username": "marangip",
-            "password": "1234pass"
+            "password": "2$4pass"
         }
         # complete business info
         self.test_business = {

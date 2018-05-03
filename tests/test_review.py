@@ -9,7 +9,7 @@ class reviewTestCase(unittest.TestCase):
         self.review = Review()
         self.user = User()
         self.test_user = self.user.add_user(
-            'Test User', 'test@user.com', 'test_user', '1234pass')
+            'Test User', 'test@user.com', 'test_user', '2$4pass')
         self.business = Business()
         self.test_bs = self.business.add_business(
             'Test Business1', 'Supermarket',

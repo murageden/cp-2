@@ -34,12 +34,12 @@ class BusinessRoutesTestCase(unittest.TestCase):
             "name": "Mark Maroiko",
             "email": "maroikomark@test1.com",
             "username": "mar44",
-            "password": "pass1238"
+            "password": "2$4pass"
         }
         # complete login info
         self.test_login = {
             "username": "mar44",
-            "password": "pass1238"
+            "password": "2$4pass"
         }
 
     def tearDown(self):

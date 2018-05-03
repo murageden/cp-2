@@ -8,7 +8,7 @@ class BusinessTestCase(unittest.TestCase):
         self.business = Business()
         self.user = User()
         self.test_user = self.user.add_user(
-            'Test User', 'test@user.com', 'test_user', '1234pass')
+            'Test User', 'test@user.com', 'test_user', '2$4pass')
 
     def test_add_business(self):
         self.response = self.business.add_business(

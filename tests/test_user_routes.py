@@ -15,18 +15,18 @@ class UserRoutesTestCase(unittest.TestCase):
             "name": "Mark Maroiko",
             "email": "maroikomark@test1.com",
             "username": "mar44",
-            "password": "pass1238"
+            "password": "2$4pass"
         }
         # lacks email of the user
         self.incomplete_user = {
             "name": "Mark Maroiko",
             "email": "maroikomark@test1.com",
-            "password": "pass1238"
+            "password": "2$4pass"
         }
         # complete login info
         self.test_login = {
             "username": "mar44",
-            "password": "pass1238"
+            "password": "2$4pass"
         }
         # wrong combination
         self.test_bad_login = {
@@ -34,8 +34,8 @@ class UserRoutesTestCase(unittest.TestCase):
             "password": "5678usr"
         }
         self.test_reset_pass = {
-            "old password": "pass1238",
-            "new password": "1234pass"
+            "old password": "2$4pass",
+            "new password": "1$4pack"
         }
 
     def tearDown(self):
