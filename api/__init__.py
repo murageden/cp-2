@@ -43,7 +43,9 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
     return decorated
 
-
+@app.route('/'):
+def home():
+    return redirect("https://weconnnect.docs.apiary.io/", code=302)
 @app.route('/api/v1/auth/register', methods=['POST'])
 def create_user():
     """Registers a user into the API"""
