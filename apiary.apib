@@ -1,0 +1,213 @@
+FORMAT: 1A
+HOST: http://wecon.herokuapp.com
+
+# WeConnect
+WeConnect provides a platform that brings businesses and individuals together.
+This platform creates awareness for businesses and gives the users the
+ability to write reviews about the businesses they have interacted with.
+
+# Group User
+
+## User Registration [/api/v2/auth/register]
+This endpoint is used to create a new user into the API
+
+### Register a user [POST]
+The endpoint registers a new user
++ Request (application/json)
+A JSON object with the details of the user
+            
+    - Body
+        
+            {
+               "name": "Mark Kamau",
+               "email": "mk@gmail.com",
+               "username": "mk",
+               "password": "xY9er%"
+            }
+    
++ Response 200 (application/json)
+Returns a JSON response once the user has been created
+    - Headers
+        
+            
+    - Body 
+                
+            {
+                "message": "User mk created successfully on 2018-05-18 14:50:43.272478"
+            }
+            
++ Response 400 (applicaton/json)
+Returns an error response when the username passed in request exists in the database   
+    - Headers
+    
+    - Body 
+            
+            {
+                "msg": "Username not available!"
+            }
+
+## User Login [/api/v2/auth/login]
+The endpoint logs in a new user
+### Login a user [POST]
++ Request (application/json)
+A JSON object with the login details of the user
+
+    - Headers
+    
+    - Body
+    
+            {
+                "email": "mk@gmail.com",
+                "password": "xY9er%"
+            }
+
++ Response 201 (application/json)
+Returns a tokenstring. This token string can be used to access authenticated endpoints in the API
+    - Headers
+        
+            
+    - Body 
+                
+            {
+                "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im1rIiwiZXhwIjoxNTI2NjU1MzY3fQ.E-xyB1G6OPIhpi1JO4GZdn9y54Pbu0ZHOt7-0BvFGG8"
+            }  
+
+# Group Business
+## Business Registration [/api/v2/business/]
+This endpoint is used for registering a business into the API
+
+
+### Register Business [POST]
+The endpoint registers a new business
++ Request (application/json)
+A JSON object with the details of the business plus an access token passed into the headers.
+    - Headers
+
+            x-access-token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im1rIiwiZXhwIjoxNTI2NjU1MzY3fQ.E-xyB1G6OPIhpi1JO4GZdn9y54Pbu0ZHOt7-0BvFGG8"
+
+    - Body
+        
+            {
+                "name": "Mayai Hotel",
+                "description": "Best place to eat",
+                "category": "shop",
+                "location": "Along TRM"
+            }
+    
++ Response 201 (application/json)
+Returns a JSON success message as the response
+    - Headers
+        
+            
+    - Body 
+                
+            {
+                "message": "Business id <business id> created for owner <business owner>"
+            }
+                
+### Get Business [GET]
+This endpoint is used for retrieving a list of all registered businesses
+    
++ Response 200 (application/json)
+
+
+## Single Businesss [/api/v2/businesses/{id}]
+This endpoint is used for retrieving single registered businesses
+
++ Parameters
+    - id: 1 (int) - the id of the business
+    
+
+### Get Business [GET]
+Request sent to this resource returns all the businesses in the database
+            
+    
++ Response 200 (application/json)
+Returns `json` object upon  sending the get request for a specific business.
+
+    - Headers 
+
+            
+    - Body 
+                
+            {
+                "businessname": "techbase"
+                "Description":"james7738"
+                "category":"thisisandela123"
+                "location":"runda"
+            }
+    
+
+### Update Business[PUT]
+This enpoint updates the business.
++ Request (application/json)
+Request takes a token header and business 
+    - Header 
+            
+            Authorization: Bearer tokenstring
+            
+
+            
+    - Body
+        
+            {
+                "businessname": "techbase"
+                "Description":"james7738"
+                "category":"thisisandela123"
+                "location":"runda"
+            }
+    
++ Response 200 (application/json)
+Returns a `json` updated request of the post request sent.
+    - Headers
+        
+            
+    - Body 
+                
+            {
+                "businessname": "techbase",
+                "Description":"james7738",
+                "category":"thisisandela123",
+                "location":"runda"
+            }
+
+### Delete Business[DELETE]
+This endpoint deletes a business.
++ Response 202 (application/json)
+deletes a business upon validating the token passed in the headers.
+
+    - Headers
+
+                Authorization: Bearer tokenstring
+             
+    - Body 
+                
+            {
+                "message":"Business successfully deleted"
+            }
+            
++ Response 404 (application/json)
+Returnes when a queried business is not found in the database.   
+    - Headers
+               
+    - Body 
+                
+            {
+                "message":"Business not found"
+            }
+            
+## Logout [/api/v1/auth/logout]
+Requests sent by the client to this resource dumps the current token and renders it invalid.
+
+
+### Logout User[DELETE]
+The endpoint logs out a user
+
++ Response 200 (application/json)
+returns  a success `json` message after invalidating the token.
+            
+    - Body 
+                
+            {
+                "message":"Successfully logged out"
+            }
