@@ -11,7 +11,6 @@ from .users import User
 from .businesses import Business
 from .reviews import Review
 from .validators import Validator
-from api import app
 
 business = Business()
 user = User()
