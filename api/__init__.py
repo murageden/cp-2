@@ -1,3 +1,4 @@
+"""api/__init__.py."""
 from flask import Flask, jsonify, request, redirect
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -5,22 +6,22 @@ from datetime import timedelta
 from functools import wraps
 import jwt
 
-app = Flask(__name__)
-
-app.config['DEBUG'] = True
-app.config['SECRET_KEY'] = 'p9Bv<3Eid9%$i01'
-
 # local imports
-from .user import User
-from .business import Business
-from .review import Review
-from .validator import Validator
+from .users import User
+from .businesses import Business
+from .reviews import Review
+from .validators import Validator
 from api import app
 
 business = Business()
 user = User()
 review = Review()
 validator = Validator()
+
+app = Flask(__name__)
+
+app.config['DEBUG'] = True
+app.config['SECRET_KEY'] = 'p9Bv<3Eid9%$i01'
 
 
 def token_required(f):
@@ -34,18 +35,25 @@ def token_required(f):
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
         except:
-            return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 401
+            return jsonify({'msg':
+                            'Token is invalid, Please login to get a fresh token'}),
+            401
         current_user = User.view_user(data['username'])
         if not current_user:
-            return jsonify({'msg': 'Token is invalid, Please login to get a fresh token'}), 401
-        if current_user['logged_in'] == False:
+            return jsonify({'msg':
+                            'Token is invalid, Please login to get a fresh token'}),
+            401
+        if not current_user['logged_in']:
             current_user = None
         return f(current_user, *args, **kwargs)
     return decorated
 
+
 @app.route('/')
 def home():
     return redirect("https://weconnnect.docs.apiary.io/", code=302)
+
+
 @app.route('/api/v1/auth/register', methods=['POST'])
 def create_user():
     """Registers a user into the API"""

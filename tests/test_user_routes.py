@@ -3,7 +3,7 @@ import jwt
 from flask import jsonify, json
 # local imports
 from api import app
-from api.user import User
+from api.users import User
 
 
 class UserRoutesTestCase(unittest.TestCase):
