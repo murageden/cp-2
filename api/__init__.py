@@ -35,13 +35,11 @@ def token_required(f):
             data = jwt.decode(token, app.config['SECRET_KEY'])
         except:
             return jsonify({'msg':
-                            'Token is invalid, Please login to get a fresh token'}),
-            401
+                            'Token is invalid, Please login to get a fresh token'}), 401
         current_user = User.view_user(data['username'])
         if not current_user:
             return jsonify({'msg':
-                            'Token is invalid, Please login to get a fresh token'}),
-            401
+                            'Token is invalid, Please login to get a fresh token'}), 401
         if not current_user['logged_in']:
             current_user = None
         return f(current_user, *args, **kwargs)
@@ -65,7 +63,8 @@ def create_user():
     if User.view_user(content['username'].strip()):
         return jsonify({'msg': 'Username not available'}), 400
     new_user = user.add_user(content['name'].strip(), content['username'].strip(),
-                             content['email'].strip().lower(), generate_password_hash(content['password'].strip()))
+                             content['email'].strip().lower(), generate_password_hash(
+        content['password'].strip()))
     message = {
         'user': {
             'name': new_user['name'],
@@ -247,7 +246,8 @@ def add_review_for(current_user, businessId):
     if to_review['owner']['username'] == current_user['username']:
         return jsonify({'msg': 'Review own business not allowed'}), 400
     added_review = review.add_review(content['rating'],
-                                     content['body'].strip(), current_user['username'], businessId)
+                                     content['body'].strip(),
+                                     current_user['username'], businessId)
     message = {
         'msg': f'Review added successfully',
                 'details': added_review
